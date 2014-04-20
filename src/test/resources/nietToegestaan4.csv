@@ -1,0 +1,2 @@
+\\server1\share1\dir1\a???.* /f;\\root2\share2\dir1;ONWAAR;ONWAAR;0;_;10;Zie hieronder.
+\\server1\share1\dir1\abc?.* /f;\\root2\share2\dir2;ONWAAR;ONWAAR;0;_;10;!Deze regel kan niet in combinatie met de voorgaande. Filters op de zelfde bron mogen elkaar niet overlappen

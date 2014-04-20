@@ -1,0 +1,260 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" >
+<html>
+    <head>
+        <title>MyArchive&reg; personal archive</title>
+        <style type="TEXT/CSS">
+
+            BODY {background-color: white; margin: 20pt; font-size: 12px; line-height: 18px; font-family: Arial, Sans-Serif}
+
+            H1, H2 {color: black; text-align:center}
+
+            H3 {color: red; text-align:center}
+
+            H4 {color: black}
+
+            P {text-align: justify}
+
+        </style>
+    </head>
+    <body>
+        <h1>DataSync Synchronisatie tool</h1>
+        <h2>Help</h2>
+        <h3>Versie 1.27 (december 2010)</h3>
+        <h4>Contents</h4>
+        <ul>
+            <li><a href="#10">Doel</a> </li>
+            <li><a href="#20">Functies</a></li>
+            <li><a href="#25">Verschil met command line tools</a></li>
+            <li><a href="#30">Mapping tabel</a> </li>
+            <li><a href="#40">Bijzondere mappings</a> </li>
+            <li><a href="#50">Andere toepassingen</a></li>
+            <li><a href="#copyright">Copyright Notice</a> </li>
+        </ul>
+        <hr>
+        <h4><a name="10"></a>Doel</h4>
+        <p>Dit programma is ontwikkeld als hulpmiddel bij de overgang van een oud serverpark
+            naar een nieuw serverpark. Het probleem was dat de migratie in &eacute;&eacute;n
+            weekend moest plaatsvinden. Voor het overzetten van de data was niet meer dan
+            de avond en nacht van vrijdag op zaterdag beschikbaar. Bovendien is de mapping
+            van de oude naar de nieuwe omgeving complex. Oude shares van verschillende servers
+            worden samengevoegd, enkele oude directories worden onder een andere share of
+            directorie geplaatst.</p>
+        <p>Met dit tool is het mogelijk ruim voor het migratieweekend de bulk van de data
+            over te zetten en vervolgens dagelijks alleen de updates. De avond voor de migratie
+            hoeven alleen de files die dezelfde dag zijn veranderd of nieuw aangemaakt te
+            worden gekopieerd. De mappings zijn door de gebruiker vastgelegd in een mapping
+            tabel. Als de data in de dagen voorafgaand aan de migratie naar de correcte
+            shares en directories zijn gekopieerd kan de gebruiker ervan uitgaan dat ook
+            de laatste synchronisatie correct zal verlopen. Het risico in tijd en kwaliteit
+            van de data migratie wordt met dit tool geminimaliseerd.</p>
+        <p>Het programma voorkomt dat een file naar meer dan 1 bestemming wordt gekopieerd.
+            Als dit toch de bedoeling is moet het programma meerdere malen worden gedraaid
+            met een andere mapping tabel.</p>
+        <p>Vanaf versie 1.24 is het ook mogelijk data binnen dezelfde server te kopieren
+            gebruik makend van een wildcard voor de selectie van files of directories. Na
+            de kopieslag heeft de gebruiker de mogelijkheid de bron bestanden te verwijderen.
+            Met deze functies is het mogelijk intern 'opruiming' te houden. Het is van belang
+            v&oacute;&oacute;r deze acties een volledige backup te maken.</p>
+        <h4><a name="20"></a>Functies</h4>
+        <p>Het programma vraagt om een file waarin de gebruiker heeft aangegeven welke
+            'root' directories als bron met welke 'root' directories als bestemming gesynchroniseerd
+            moeten worden. De hele 'tree' van subdirecties onder de bestemming wordt vergeleken
+            met de 'tree' onder de bron. Zie hieronder voor de uitleg van deze 'mapping'
+            tabel.</p>
+        <p><b>Acties:</b><br>
+            Met de 'kopieer' functie worden nieuwe betanden naar de bestemming gekopieerd. Ook worden bestanden waarvan de bron nieuwer is dan de bestemming
+            (latere 'modify' timestamp) over het oude bestemmingsbestand geschreven.<br>
+            LET OP! Het programma vergelijkt alleen de naam en de laatste modificeerdatum van het bron- en bestemmingsbestand. Het kan niet zien of een nieuw bronbestand een ander doel dient dan het oudere bestemmingbestand.
+            Het oudere bestemmingbestand wordt overschreven met het nieuwe bronbestand.<br>
+            <br>
+            Met de 'vergelijk' functie wordt bepaald welke files bij een kopieer functie
+            zullen worden overschreven.<br>
+            Worden beide acties geselecteerd dan wordt eerst gekopieerd en vervolgens ter
+            controle een vergelijking uitgevoerd.</p>
+        <p><b>Controle:</b><br>
+            Voordat een of beide acties kunnen worden gekozen wordt de mapping tabel gecontroleerd
+            op fouten. Gecontroleerd wordt of de bronnen bestaan en gelezen kunnen worden,
+            de bestemmingen bestaan, en schrijftoegang mogelijk is. Deze controle kan worden
+            uitgeschakeld voor het off-line valideren van de overige velden. Ook wordt gecontroleerd
+            op mappings die niet zijn toegestaan (zie onder Mapping tabel).</p>
+        <p><b>Logging:</b><br>
+            Tijdens de uitvoering van de acties wordt een log bijgehouden met alle nieuw
+            aangemaakte directories, de gekopieerde files en alle fouten die optreden. Veel
+            voorkomende oorzaken van fouten zijn onvoldoende toegangsrechten, of files die
+            in gebruik zijn.</p>
+        <h4><a name="25"></a>Verschil met command line tools</h4>
+        <p>Command line tools als XCOPY en ROBOCOPY uit de Windows omgeving kunnen ook
+            directory trees kopieren of synchroniseren. De verschilllen met deze tool zijn:</p>
+        <ul>
+            <li>DataSync heeft een integrale aanpak, het synchroniseert een heel serverpark
+                met een ander serverpark a.d.h.v. een centrale tabel.</li>
+            <li>DataSync garandeert dat files naar &eacute;&eacute;n bestemming worden gekopieerd.
+                De controle hierop vindt vooraf plaats.</li>
+            <li>DataSync voorkomt fouten. Als een mapping tabel gisteren goed heeft gewerkt
+                werk het vandaag opnieuw goed, terwijl alleen veranderde files worden gekopieerd.</li>
+            <li>DataSync kan 'langzaam' kopieren waardoor de verstoring van het netwerk
+                minimaal is.<br>
+            </li>
+        </ul>
+        <h4><a name="30"></a>Mapping tabel</h4>
+        <p>In de mapping tabel geeft de gebruiker aan welke bronnen met welke bestemmingen
+            moeten worden gesynchroniseerd. Per regel (tuple van bron en bestemming) worden
+            bovendien nog een aantal parameters ingevuld. </p>
+        <p>In een Excel of Open-Office speadsheet kunnen meerdere bronnen en bestemmingen
+            worden opgenomen. Per tuple wordt de 'overschrijf nieuwer' vlag ingevuld, de maximale bandbreedte,
+            de 'data limiet' en het maximale aantal fouten.</p>
+        <table width="101%" border="1" cellspacing="10" cellpadding="5">
+            <tr>
+                <td width="15%"><b>bron</b></td>
+                <td width="85%">Een UNC pad in de vorm van \\server\share\dir-level1\level2\etc,
+                    de bron moet een directory zijn.</td>
+            </tr>
+            <tr>
+                <td width="15%"><b>bestemming</b></td>
+                <td width="85%">Zie voor het formaat de beschrijving van de  bron. De directory moet bestaan (wordt niet automatisch aangemaakt). </td>
+            </tr>
+            <tr>
+                <td width="15%"><b>verwijder bron</b></td>
+                <td width="85%">Als WAAR worden alle bestanden waarvan de zelfde of een nieuwere versie op de bestemming staat verwijderd. </td>
+            </tr>
+            <tr>
+                <td width="15%"><b>max bandbreedte</b></td>
+                <td width="85%">Maximale bandbreedte waarmee bestanden worden gekopieerd (zie uitleg
+                    hieronder).</td>
+            </tr>
+            <tr>
+                <td width="15%"><b>data limiet</b></td>
+                <td width="85%">Maximale hoeveelheid data in MB die voor deze tuple mag worden
+                    gekopieerd.</td>
+            </tr>
+            <tr>
+                <td width="15%"><b>max errors</b></td>
+                <td width="85%"> Maximale aantal fouten voordat het programma stopt met de
+                    verwerking van deze bron.</td>
+            </tr>
+        </table>
+        <p><b>Fiter specs:</b><br>
+            Door achter de bron naam een wildcard toe te voegen worden alleen de hiermee
+            geselecteerde files gekopieerd. Voorbeeld: \\server1\dir1\2???.* kopieert
+            alleen files waarvan de naam 4 lang is en begint met het cijfer 2. Alle extenties
+            voldoen. De geselecteerde files worden van andere opdrachtregels in de mapping
+            tabel uitgesloten. De specificatie van de mogelijke wildcards is als volgt:</p>
+        <blockquote>
+            <p>A wildcard can have 2 parts:<br>
+                <br>
+                <b>before the dot (.)</b><br>
+                star(*) means: any string including dots allowed in a UNC path<br>
+                question mark (?) means: any character allowed in a file name,<br>
+                one * and many ? are allowed; one or more ? after a * are ignored<br>
+                <br>
+                <b>after the dot (.)</b><br>
+                star(*) means: any single component of an UNC path (no' \' or ' .' allowed)<br>
+                question mark (?) means: any character allowed in a file name,<br>
+                one * and many ? are allowed; one or more ? after a * are ignored<br>
+                <br>
+                <b>examples:</b><br>
+                abc.*<br>
+                abc*.*<br>
+                *.abc<br>
+                *.?bc<br>
+                ??abc*.*<br>
+                ??a*.*<br>
+                abc.?<br>
+                ??*.*<br>
+                abc. does nothing on Windows<br>
+                abc is the same as abc.*</p>
+        </blockquote>
+        <p><b>File filter opties:</b><br>
+            Een file filter kent twee opties. /S voor &quot;neem ook alle subdirectories
+            mee&quot; en /D voor &quot;dump alle gevonden files in de root van de bestemming,
+            maak geen subdirectories aan&quot;. Met /SD worden bijde opties aangezet.<br>
+            Voorbeeld1: \\server1\dir1\2???.* /S onderzoekt ook alle subdirectories
+            van dir1 naar files die voldoen aan de wildcard en kopieert deze naar de overeenkomstige
+            subdirectory in de bestemming.<br>
+            Voorbeeld2: \\server1\dir1\2???.* /SD doet het zelfde als voorgaand voorbeeld
+            maar dumpt alle gevonden files in de root van de bestemming. Bij twee of meer bronbestanden met de zelfde naam zal de meest
+            recente in de bestemming worden geplaatst.</p>
+        <p><br>
+            <b>File formaat:</b><br>
+            Voor gebruik moet de mapping tabel als CSV (Comma Separated) file worden opgeslagen.
+            Velden, en alle velden daarna in de zelfde regel die met een ! beginnen worden
+            als commentaar opgevat.</p>
+        <p>voorbeeld regel: \\server1\dir1;\\ulc-local\root1\dir1;FALSE;FALSE;10;10000;100!dit
+            is een voorbeeld<br>
+            (in het spreadsheet hoeven geen punt-komma's te worden getypt)</p>
+        <p><b>Uitzonderingen:</b><br>
+            Door een subdirectory van een bron op te nemen in de tabel kan een uitzondering
+            worden aangemaakt. Deze subdirectory wordt nu met de nieuw opgegeven target
+            vergeleken. Door geen bestemming aan te geven (met een underscore) wordt de
+            bijbehorende bron uitgesloten van synchronisatie.</p>
+        <p><b>Niet toegestaan:</b><br>
+            Het is niet toegestaan een zelfde bron meerdere keren te gebruiken<br>
+            Het is niet toegestaan een bestemming zonder bron in te voeren<br>
+            Het is niet toegestaan een bestemming op te geven gelijk aan de bron, of als
+            de /S optie aanstaat, een subdirectory van de bron<br>
+            Het is niet toegestaan filters op te geven de (deels) overlappend zijn (de zelfde
+            files selecteren)</p>
+        <p><b>Verwijder bron:<br>
+            </b>Alle bestanden waarvan een nieuwere versie op de bestemming staat  worden verwijderd.  Dit kan handig zijn om tijdens het synchroniseren ruimte te maken. Deze optie altijd op uit (ONWAAR) zetten als het programma voor backup doeleinden wordt gebruikt. <br>
+            WAARSCHUWING: Na het verwijderen van de files kan alleen nog in de omgekeerde richting
+            gesynchroniseerd worden om de verwijderde bestanden terug te plaatsen. Daarbij worden ook nieuwe bestanden teruggeplaatst die er oorspronkelijk niet stonden. </p>
+        <p><b>Max bandbreedte:</b><br>
+            Hiermee wordt de kopieersnelheid begrensd door tussen kleine files (< 5 MB) en bij
+            grote files na ieder blok van 5 MB een pauze in te lassen.</p>
+        <p><b>Data limiet:</b><br>
+            Per regel (bron - bestemming) mapping geeft de gebruiker een datalimiet op (in
+            MB) of een underscore (geen limiet).<br>
+            Per mapping (tuple) houdt het programma cummulatief het aantal gekopieerde megabytes
+            bij <br>
+            Voordat een file wordt gekopieerd wordt vastgesteld of (volumeTotNuToe + file.grootte
+            &gt; limiet). Als dit waar is wordt gestopt met deze Bron (opdrachtregel) en
+            wordt doorgegaan met de volgende opdrachtregel. <br>
+            Dankzij de eerste test wordt nooit meer dan de limiet gekopieerd. Files worden
+            altijd in hun geheel gekopieerd of helemaal niet.</p>
+        <p><b>Max errors</b>:<br>
+            Per regel (bron - bestemming) mapping geeft de gebruiker het maximale aantal
+            fouten op dat mag optreden of een underscore (geen limiet).<br>
+            Per mapping (tuple) houdt het programma het aantal fouten (severe errors in
+            de log) bij.<br>
+            Nadat een file is gekopieerd (of vergeleken) wordt gecontroleerd of het maximum
+            is bereikt of overschreden; Als dit het geval is wordt gestopt met deze Bron
+            (opdrachtregel) en wordt doorgegaan met de volgende opdrachtregel.</p>
+        <h4><a name="40"></a>Bijzondere mappings</h4>
+        <p><b>Maak een uizondering voor een deel van een bron directory tree:</b><br>
+            \\server1\share1\dir1;\\root2\share2\dir1;TRUE;FALSE;0;100;10;<br>
+            \\server1\share1\dir1\dir11;\\root2\share3\dir1\dir11;TRUE;FALSE;10;1000;100;<br>
+            Gedeeltelijke overrule van de eerste regel: kopieer nieuwe files van dir11 NIET
+            naar root2\share2\dir1\dir11 maar naar root2\share3\dir1\dir11</p>
+        <p><b>Sluit een directory uit:</b><br>
+            \\server1\share1\dir1;\\root2\share2\dir1;TRUE;FALSE;0;100;10;<br>
+            \\server1\share1\dir1\dir12;_;TRUE;FALSE;10;10000;100;<br>
+            Gedeeltelijke overrule van de eerste regel: kopieer nieuwe files van dir12 NIET
+            naar het Windows systeem</p>
+        <p><b>Kopieer meerdere bronnen naar de zelfde bestemming:</b><br>
+            \\server1\share1\dir1;\\root2\share2\dir1;TRUE;FALSE;0;100;10; <br>
+            \\server1\share1\dir2;\\root2\share2\dir1;FALSE;FALSE;10;_;100;<br>
+            Toegestaan: meer dan 1 bron kopieert naar dezelfde bestemming. Nieuwere files
+            (evt. afkomstig van \\server1\share1\dir2) worden hier niet overschreven (het
+            veld 'overschrijf nieuwer' staat op 'false').<br>
+            Let op! Het programma kijkt niet naar de inhoud van een file. Als twee verschillende
+            documenten een zelfde naam hebben komt het laatst gemodificeerde document in
+            de bestemming terecht. </p>
+        <p><b>Vind en sorteer alle standaard Microsoft Office documenten:</b><br>
+            \\server1\share1\dir1\*.doc /SD;\\root2\bestemmingen\sortering\doc/D;FALSE;FALSE;0;_;_;<br>
+            \\server1\share1\dir1\*.xls /SD;\\root2\bestemmingen\sortering\xls/D;FALSE;FALSE;0;_;_;<br>
+            \\server1\share1\dir1\*.pdf /SD;\\root2\bestemmingen\sortering\pdf/D;FALSE;FALSE;0;_;_;<br>
+            \\server1\share1\dir1\*.ppt /SD;\\root2\bestemmingen\sortering\ppt/D;FALSE;FALSE;0;_;_;<br>
+            Oudere versies van elk document worden overschreven. Die nieuwste versie blijft
+            over.<br>
+            Let op! Het programma kijkt niet naar de inhoud van een file. Als twee verschillende
+            documenten een zelfde naam hebben komt het laatst gemodificeerde document in
+            de bestemming terecht.</p>
+        <h4><a name="50"></a> Andere toepassingen</h4>
+        <p>Dit programma kan ook gebruikt worden waar normaal een copy of backup tool
+            wordt ingezet. Met DataSync kan het proces rustig (zonder de servers of het
+            netwerk te overbelasten) verlopen dankzij de 'delay' optie.</p>
+
+        <h4><a name="copyright"></a>Copyright Notice</h4>
+        <p>&copy; Copyright 2004-2010 by Verheul Consultants. All rights reserved. </p>
+    </body>
+</html>

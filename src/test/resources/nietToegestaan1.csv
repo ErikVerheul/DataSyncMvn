@@ -1,0 +1,2 @@
+\\server1\share1\dir1;\\root2\share2\dir1;ONWAAR;ONWAAR;0;100;10;!Kopieer nieuwe files van de map dir1 op share1 naar de map dir1 in root2. Herhaal dit voor alle submappen van dir1 etc. (recursief)
+\\server1\share1\dir1;\\root2\share2\dir2;ONWAAR;ONWAAR;10;_;100;!NIET toegestaan: zelfde bron naar meerdere bestemmingen

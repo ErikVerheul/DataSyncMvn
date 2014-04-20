@@ -1,0 +1,37 @@
+!bron;bestemming;verwijder bron na kopie;max band-breedte (MB/s);data limiet;max errors;commentaar
+!Toelichting algemeen:;;;;;;
+!De synchronisatie wordt in regelvolgorde uitgevoerd (van boven naar beneden);;;;;;
+!Een regel met als bron een subdirectory van een andere regel definieert een 'overrule'. Een overrule regel mag zowel voor als na de regel staan die wordt overruled.;;;;;;
+!Lege regels altijd starten met een !;;;;;;
+!;;;;;;
+!Toelichting op de veldnamen:;;;;;;
+!Bron en Bestemming in UNC notatie: \\server naam\share naam\directory of \\domein naam\DFS share\directory;;;;;;
+!bestemming;Mag geen subdirectory zijn van de bron en moet bestaan. Gebruik '_' (underline) teken voor een lege bestemming;;;;;
+!overschrijf nieuwer:;Als TRUE worden bestemming files die nieuwer zijn dan de bron files overschreven;;;;;
+!verwijder bron;Als TRUE wordt een lijst samengesteld voor de verwijdering van Bronnen die met succes zijn gekopieerd of waarvan de versie op de Bestemming nieuwer is;;;;;
+!max bandbreedte: ;Maximale doorzet in Mbytes/sec bij het kopiëren Deze optie is misschien nodig om het netwerk niet te overbelasten.;;;;;
+!;Type 0 voor de maximale snelheid.;;;;;
+!data limiet;Maximum te kopiëren MB; STOP voordat deze limiet is bereikt. Gebruik '_' (underline) teken voor een onbeperkte data limiet;;;;;
+!max errors:;Maximum aantal toegestane 'severe' errors; STOP als deze limiet is bereikt;;;;;
+!;;;;;;
+!noot:;Velden die beginnen met een uitroepteken en volgende velden in de regel zijn commentaar;;;;;
+!;;;;;;
+!voorbeelden synchronisatie van files;;;;;;
+\\server1\share1\dir1;\\root2\share2\dir1;ONWAAR;ONWAAR;0;100;10;!Kopieer nieuwe files van de map dir1 op share1 naar de map dir1 in de DFS root root2 op het Windows systeem. Herhaal dit voor alle submappen van dir1 etc. (recursief)
+\\server1\share1\dir1\dir11;\\root2\share2\dir2;ONWAAR;ONWAAR;10;1000;100;!Gedeeltelijke overrule van regel 20: kopieer nieuwe files van dir11 NIET naar root2\share2\dir1\dir11 maar naar root2\share2\dir2
+\\server1\share1\dir1\dir12;_;ONWAAR;ONWAAR;10;10000;100;!Gedeeltelijke overrule van regel 20: kopieer GEEN files van dir12
+\\server1\share1\dir2;\\root2\share2\dir1;ONWAAR;ONWAAR;10;_;100;!Toegestaan: meer dan 1 bron (zie regel 20) kopieert naar dezelfde bestemming. Nieuwere files (evt. afkomstig van \\server1\share1\dir1) worden hier niet overschreven zodat de meest recente file op de bestemming komt.
+!wat niet mag;;;;;;
+!\\server1\share1\dir1;\\root2\share2\dir2;ONWAAR;ONWAAR;10;_;100;!NIET toegestaan: zelfde bron (zie regel 20) naar meerdere bestemmingen
+!\\server1\share1\dir1;\\server1\share1\dir1\dir13;ONWAAR;ONWAAR;10;_;100;!NIET toegestaan: bestemming is subdirectory van de bron
+!_;\\root2\share2\dir3;ONWAAR;ONWAAR;10;_;100;!NIET toegestaan: bestemming zonder bron
+!;;;;;;
+!voorbeelden gebruik van file en directory filters;;ONWAAR;ONWAAR;;;;
+\\server1\share1\dir1\a???.* /f;\\root2\share2\dir1;ONWAAR;ONWAAR;0;_;10;!Kopieer nieuwe files van de map dir1 beginnend met een a en 4 tekens lang op share1 naar de map dir1 in de DFS root root2 op het Windows systeem.
+\\server1\share1\dir1\b???.* /d;\\root2\share2\dir1;ONWAAR;ONWAAR;0;_;10;!Kopieer nieuwe files van de map dir1 in de subdirectories beginnend met een b en 4 tekens lang op share1 naar de map dir1 in de DFS root root2 op het Windows systeem.
+!alle files naar één directory;;;;;;
+\\server1\share1\dir1\e???.* /f;\\root2\share2\dir1 /d;ONWAAR;ONWAAR;0;_;10;!Als regel 31, maar nu worden geen subdirectories aangemaakt onder de Bestemming. Alle files worden 'gedumpt' in \\root2\share2\dir1. Als 'overschrijf nieuwer' uit staat komt de meest recente versie van een file in de Bestemming terecht. Als 'overschrijf nieuwer' aan staat komt de laatst vergeleken versie van een file in de Bestemming terecht.
+!wat niet mag;;;;_;;
+!\\server1\share1\dir1\a???.* /fd;\\root2\share2\dir1;ONWAAR;ONWAAR;0;_;10;!Kies of voor file, of voor directory selectie, niet beide
+!\\server1\share1\dir1\a???.* /f;\\root2\share2\dir1;ONWAAR;ONWAAR;0;_;10;Zie hieronder.
+!\\server1\share1\dir1\abc?.* /f;\\root2\share2\dir2;ONWAAR;ONWAAR;0;_;10;!Deze regel kan niet in combinatie met de voorgaande. Filters op de zelfde bron mogen elkaar niet overlappen
