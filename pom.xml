@@ -8,7 +8,10 @@
     
     <name>DataSyncMvn</name>
     <url>http://verheulconsultants.nl</url>
-    
+    <ciManagement>
+        <system>hudson</system>
+        <url>http://PE-T110/jenkins/job/DataSyncMvn/</url>
+    </ciManagement>
     <build>
         <resources>
             <resource>
