@@ -7,8 +7,8 @@ package nl.verheulconsultants.datasyncmvn;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -42,23 +42,17 @@ public class FindHelpFileTest {
     }
 
     @Test
-    public void findHelpFile() throws URISyntaxException {
-        // get the directory where the application was started
-        // cd to the app directory first, then invoke
-        File directory = new File(".");
+    public void findHelpFile() {
+        System.out.println("findHelpFile");
+        ClassLoader cl = MainFrame_AboutBox.class.getProtectionDomain().getClassLoader();
+        
+        File file = new File("help.html");
+        InputStream link = (cl.getResourceAsStream("resources/Help.html"));
         try {
-            String path = directory.getCanonicalPath();
-            System.out.println("Current directory's canonical path: " + path);
-            // check if on Jenkins build server
-            if (path.endsWith("workspace")) path = path + System.getProperty("file.separator") + "dist";
-            path = path + System.getProperty("file.separator") + "Help.html";
-            assertTrue("The help file does not exist on this location", new File(path).exists());
-            if (new File(path).exists()) {
-                URI uri = new File(path).toURI();
-                System.out.println("URI = " + uri);
-            }
-        } catch (IOException e) {
-            System.out.println("Exception = " + e.getMessage());
+            Files.copy(link, file.getAbsoluteFile().toPath());
+            assertTrue("The help file does not exist", file.exists());
+        } catch (IOException ex) {
+            System.err.println("Cannot show help file, exception = " + ex.getMessage());
         }
     }
 }

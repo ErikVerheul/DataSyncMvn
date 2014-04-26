@@ -2,6 +2,7 @@ package nl.verheulconsultants.datasyncmvn;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URL;
 import javax.swing.*;
 
 public class MainFrame_AboutBox extends JDialog implements ActionListener {
@@ -34,7 +35,9 @@ public class MainFrame_AboutBox extends JDialog implements ActionListener {
   }
   //Component initialization
   private void jbInit()  {
-    image1 = new ImageIcon(nl.verheulconsultants.datasyncmvn.MainFrame.class.getResource("ocean.png"));
+    ClassLoader cl = MainFrame_AboutBox.class.getProtectionDomain().getClassLoader();
+    URL url = cl.getResource("resources/ocean.png");
+    image1 = new ImageIcon(url);
     imageLabel.setIcon(image1);
     this.setTitle("About");
     panel1.setLayout(borderLayout1);

@@ -3,6 +3,8 @@ package nl.verheulconsultants.datasyncmvn;
 import static nl.verheulconsultants.datasyncmvn.DataSync.loggerFileHandler;
 import java.io.*;
 import java.awt.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.channels.FileChannel;
 import javax.swing.*;
 import java.util.logging.*;
@@ -83,6 +85,18 @@ class Routines {
         }
         frame.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
         frame.setVisible(true);
+    }
+    
+    static File openResourceFile(String name) {
+        URL url = Routines.class.getProtectionDomain().getClassLoader().getResource(name);
+        File file;
+        // see http://weblogs.java.net/blog/2007/04/25/how-convert-javaneturl-javaiofile
+        try {
+            file = new File(url.toURI());
+        } catch (URISyntaxException e) {
+            file = new File(url.getPath());
+        }
+        return file;
     }
 
     /**

@@ -1,9 +1,7 @@
 package nl.verheulconsultants.datasyncmvn;
 
 import static nl.verheulconsultants.datasyncmvn.DataSync.loggerFileHandler;
-import java.net.URISyntaxException;
 import java.io.File;
-import java.net.URL;
 import javax.swing.JTextArea;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -40,27 +38,33 @@ public class TaskTest {
     public void tearDown() {
     }
 
-    private File openTestResourceFile(String name) {
-        System.out.println("===================================================");
-        URL url = TaskTest.class.getProtectionDomain().getClassLoader().getResource(name);
-        System.out.println("URL found =" + url);
-        File file;
-        // see http://weblogs.java.net/blog/2007/04/25/how-convert-javaneturl-javaiofile
-        try {
-            file = new File(url.toURI());
-        } catch (URISyntaxException e) {
-            file = new File(url.getPath());
-        }
-        return file;
-    }
-
     /**
      * Test of leesTabel method, of class Task.
      */
     @Test
     public void testLeesTabel1() {
         System.out.println("leesTabel with invalid file");
-        File testTabel = openTestResourceFile("Help.html");
+        File testTabel = Routines.openResourceFile("Help.html");
+        Task instance = new Task(testTabel, new JTextArea());
+        MainFrame.checkAccessToBronAndBestemming = false;
+        boolean expResult = false;
+        boolean result = instance.leesTabel();
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of leesTabel method, of class Task.
+     */
+    @Test
+    public void testLeesIcon() {
+        
+        // xxxxxxxxxxxxx tets test xxxxxxxxxxxxxxxxx
+        String home = getClass().getProtectionDomain().getCodeSource().getLocation().getPath().replaceAll("%20", " ");
+        System.out.println("home = " + home);
+        
+        System.out.println("leesTabel with invalid file");
+        // the Help file is not a valid input file
+        File testTabel = Routines.openResourceFile("Help.html");
         Task instance = new Task(testTabel, new JTextArea());
         MainFrame.checkAccessToBronAndBestemming = false;
         boolean expResult = false;
@@ -71,7 +75,7 @@ public class TaskTest {
     @Test
     public void testLeesTabel2() {
         System.out.println("leesTabel with valid file");
-        File testTabel = openTestResourceFile("toegestaan.csv");
+        File testTabel = Routines.openResourceFile("toegestaan.csv");
         Task instance = new Task(testTabel, new JTextArea());
         MainFrame.checkAccessToBronAndBestemming = false;
         boolean expResult = true;
@@ -82,7 +86,7 @@ public class TaskTest {
     @Test
     public void testLeesTabel3() {
         System.out.println("leesTabel - NIET toegestaan: zelfde bron naar meerdere bestemmingen");
-        File testTabel = openTestResourceFile("nietToegestaan1.csv");
+        File testTabel = Routines.openResourceFile("nietToegestaan1.csv");
         Task instance = new Task(testTabel, new JTextArea());
         MainFrame.checkAccessToBronAndBestemming = false;
         boolean expResult = false;
@@ -93,7 +97,7 @@ public class TaskTest {
     @Test
     public void testLeesTabel4() {
         System.out.println("leesTabel - NIET toegestaan: bestemming is subdirectory van de bron");
-        File testTabel = openTestResourceFile("nietToegestaan2.csv");
+        File testTabel = Routines.openResourceFile("nietToegestaan2.csv");
         Task instance = new Task(testTabel, new JTextArea());
         MainFrame.checkAccessToBronAndBestemming = false;
         boolean expResult = false;
@@ -104,7 +108,7 @@ public class TaskTest {
     @Test
     public void testLeesTabel5() {
         System.out.println("leesTabel - Kies of voor file, of voor directory selectie, niet beide");
-        File testTabel = openTestResourceFile("nietToegestaan3.csv");
+        File testTabel = Routines.openResourceFile("nietToegestaan3.csv");
         Task instance = new Task(testTabel, new JTextArea());
         MainFrame.checkAccessToBronAndBestemming = false;
         boolean expResult = false;
@@ -115,7 +119,7 @@ public class TaskTest {
     @Test
     public void testLeesTabel6() {
         System.out.println("leesTabel - Filters op de zelfde bron mogen elkaar niet overlappen");
-        File testTabel = openTestResourceFile("nietToegestaan4.csv");
+        File testTabel = Routines.openResourceFile("nietToegestaan4.csv");
         Task instance = new Task(testTabel, new JTextArea());
         MainFrame.checkAccessToBronAndBestemming = false;
         boolean expResult = false;
@@ -126,7 +130,7 @@ public class TaskTest {
     @Test
     public void testLeesTabel7() {
         System.out.println("leesTabel - bestemming zonder bron");
-        File testTabel = openTestResourceFile("nietToegestaan5.csv");
+        File testTabel = Routines.openResourceFile("nietToegestaan5.csv");
         Task instance = new Task(testTabel, new JTextArea());
         MainFrame.checkAccessToBronAndBestemming = false;
         boolean expResult = false;

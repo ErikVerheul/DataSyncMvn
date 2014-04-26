@@ -33,7 +33,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>nl.verheulconsultants.switchispmaven.SwitchISPService</mainClass>
+                            <mainClass>nl.verheulconsultants.datasyncmvn.DataSync</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

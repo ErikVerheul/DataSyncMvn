@@ -1,14 +1,15 @@
 package nl.verheulconsultants.datasyncmvn;
 
-import static nl.verheulconsultants.datasyncmvn.DataSync.loggerFileHandler;
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.logging.Level;
-import javax.swing.*;
 import java.io.*;
 import java.net.URI;
+import java.nio.file.Files;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.*;
+import static nl.verheulconsultants.datasyncmvn.DataSync.loggerFileHandler;
 
 /**
  * The GUI interface
@@ -253,7 +254,7 @@ public class MainFrame extends JFrame {
             int returnVal = fs.showOpenDialog(this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 String newLogPath = fs.getSelectedFile().getPath() + System.getProperty("file.separator") + name;
-                if (!Routines.stringsEqual(newLogPath, DataSync.logFile.getPath(), DataSync.runningWindows)) {  
+                if (!Routines.stringsEqual(newLogPath, DataSync.logFile.getPath(), DataSync.runningWindows)) {
                     LOGGER.log(Level.INFO, "Log file veranderd van {0} naar {1}", new Object[]{DataSync.logFile.getPath(), newLogPath});
                     DataSync.loggerFileHandler.close();
                     LOGGER.removeHandler(DataSync.loggerFileHandler);
@@ -577,7 +578,17 @@ public class MainFrame extends JFrame {
         checkAccessToBronAndBestemming = jCheckBoxMenuItemCheckAccess.isSelected();
     }
 
-    private void showHelp(URI uri) {
+    private void showHelp() {
+        ClassLoader cl = MainFrame_AboutBox.class.getProtectionDomain().getClassLoader();      
+        File file = new File("help.html");
+        InputStream link = (cl.getResourceAsStream("resources/Help.html"));
+        try {
+            Files.copy(link, file.getAbsoluteFile().toPath());
+        } catch (IOException ex) {
+            System.err.println("Cannot show help file, exception = " + ex.getMessage());
+        }
+        URI uri = file.toURI();
+        
         if (Desktop.isDesktopSupported()) {
             try {
                 Desktop.getDesktop().browse(uri);
@@ -590,25 +601,7 @@ public class MainFrame extends JFrame {
     }
 
     void jMenuItemToelichting_actionPerformed(ActionEvent e) {
-        // Get the directory where the application was started
-        // For this to work cd to the app directory first, then invoke
-        File directory = new File(".");
-        try {
-            String path = directory.getCanonicalPath();
-            // check if on Jenkins build server
-            if (path.endsWith("workspace")) {
-                path = path + System.getProperty("file.separator") + "dist";
-            }
-            path = path + System.getProperty("file.separator") + "Help.html";
-            if (new File(path).exists()) {
-                URI uri = new File(path).toURI();
-                showHelp(uri);
-            } else {
-                LOGGER.log(Level.INFO, "Cannot find help file. Did you cd to the applications directory before starting?");
-            }
-        } catch (IOException e2) {
-            LOGGER.log(Level.SEVERE, "Cannot show help file, exception = {0}", e2.getMessage());
-        }
+        showHelp();
     }
 
     void jCheckBoxMenuItemOverschrijfReadOnly_actionPerformed(ActionEvent e) {
