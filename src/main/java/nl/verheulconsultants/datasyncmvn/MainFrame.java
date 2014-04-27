@@ -256,9 +256,10 @@ public class MainFrame extends JFrame {
                 String newLogPath = fs.getSelectedFile().getPath() + System.getProperty("file.separator") + name;
                 if (!Routines.stringsEqual(newLogPath, DataSync.logFile.getPath(), DataSync.runningWindows)) {
                     LOGGER.log(Level.INFO, "Log file veranderd van {0} naar {1}", new Object[]{DataSync.logFile.getPath(), newLogPath});
-                    DataSync.loggerFileHandler.close();
-                    LOGGER.removeHandler(DataSync.loggerFileHandler);
-                    DataSync.changeFileHandler(newLogPath);
+                    loggerFileHandler.close();
+                    LOGGER.removeHandler(loggerFileHandler);
+                    loggerFileHandler = Routines.createFileHandler(newLogPath);
+                    LOGGER.addHandler(loggerFileHandler);
                     DataSync.logFile = new File(newLogPath);
                     LOGGER.info("Start logging...");
                 }

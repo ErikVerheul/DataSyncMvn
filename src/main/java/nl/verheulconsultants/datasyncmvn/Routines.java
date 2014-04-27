@@ -1,13 +1,16 @@
 package nl.verheulconsultants.datasyncmvn;
 
 import static nl.verheulconsultants.datasyncmvn.DataSync.loggerFileHandler;
-import java.io.*;
 import java.awt.*;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.channels.FileChannel;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import javax.swing.*;
-import java.util.logging.*;
 
 /**
  * A set of static methods used as routines.
@@ -17,6 +20,7 @@ class Routines {
     private static final Logger LOGGER = Logger.getLogger(Routines.class.getName());
     private static boolean loggingIsInitiated = false;
 
+    // Prevent this class from being instantiated
     private Routines() {
 
     }
@@ -34,7 +38,7 @@ class Routines {
             loggingIsInitiated = true;
         }
     }
-    
+
     /**
      * Open default logFile file in user.home
      *
@@ -45,7 +49,7 @@ class Routines {
         String userHome = System.getProperty("user.home");
         return new File(userHome + separator + "DataSync_default.log");
     }
-    
+
     /**
      * Open or create a logFile file with file name
      *
@@ -57,7 +61,7 @@ class Routines {
         loggerFileHandler = null;
         try {
             loggerFileHandler = new FileHandler(logFileName, true);
-        } catch (Exception e) {
+        } catch (IOException | SecurityException e) {
             JOptionPane.showMessageDialog(null,
                     "Kan geen file handler for logging aanmaken "
                     + "Error: program wordt gestopt",
@@ -86,7 +90,7 @@ class Routines {
         frame.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
         frame.setVisible(true);
     }
-    
+
     static File openResourceFile(String name) {
         URL url = Routines.class.getProtectionDomain().getClassLoader().getResource(name);
         File file;
@@ -265,7 +269,7 @@ class Routines {
                 proc.waitFor();
                 LOGGER.log(Level.INFO, "Read-only attribuut van file {0} is verwijderd met attrib.exe", file.getPath());
                 return true;
-            } catch (Exception e) {
+            } catch (IOException | InterruptedException e) {
                 LOGGER.log(Level.SEVERE, "Kan attrib.exe {0}" + " -r" + " niet starten. Fout = " + "{1}", new Object[]{file.getPath(), e.toString()});
                 return false;
             }

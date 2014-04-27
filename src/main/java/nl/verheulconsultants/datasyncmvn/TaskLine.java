@@ -1,10 +1,12 @@
 package nl.verheulconsultants.datasyncmvn;
-import static nl.verheulconsultants.datasyncmvn.DataSync.loggerFileHandler;
+
 import java.io.*;
 import java.util.*;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import static nl.verheulconsultants.datasyncmvn.DataSync.loggerFileHandler;
 
 /**
  * One synchronization command corresponding to one line in the mapping table.
@@ -36,6 +38,12 @@ class TaskLine implements Comparable {
      * @param includeFilter the filter (can be empty)
      */
     TaskLine(Mapping map, FilterSpec includeFilter) {
+        // remove all handlers that will be replaced
+        // TODO: find out why this is necessary
+        Handler[] handlers = LOGGER.getHandlers();
+        for (Handler handler : handlers) {
+            LOGGER.removeHandler(handler);
+        }
         // Send logger output to our FileHandler.
         LOGGER.addHandler(loggerFileHandler);
         // Request that every detail gets logged.
@@ -119,10 +127,10 @@ class TaskLine implements Comparable {
 
     /**
      * Convenience method to report messages both to the thread status window
- and the logFile. 'debuginfo' messages are not reported (to file only) unless
-     * the user sets the debug mode flag. if maxReportLinesCount was reached for
-     * a 'opdrachtregel' no more 'info' messages are send to the progress
-     * display.
+     * and the logFile. 'debuginfo' messages are not reported (to file only)
+     * unless the user sets the debug mode flag. if maxReportLinesCount was
+     * reached for a 'opdrachtregel' no more 'info' messages are send to the
+     * progress display.
      *
      * @param s the message
      * @param belang the SEVEREness
@@ -156,8 +164,8 @@ class TaskLine implements Comparable {
 
     /**
      * Check if a copy of this file will pass the set data limit for this
- TaskLine Report (warning in the logFile and on screen) if the limit is passed
- Set the flag to stop processing this TaskLine
+     * TaskLine Report (warning in the logFile and on screen) if the limit is
+     * passed Set the flag to stop processing this TaskLine
      *
      * @param file the file to copy
      * @param bron the Bron name
@@ -478,7 +486,6 @@ class TaskLine implements Comparable {
                 r.errorCount++;
             }
         }
-        //nothing to do
     }
 
     /**
