@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import static nl.verheulconsultants.datasyncmvn.DataSync.loggerFileHandler;
+import static nl.verheulconsultants.datasyncmvn.Routines.makeVolumeStr;
 
 /**
  * One synchronization command corresponding to one line in the mapping table.
@@ -29,6 +30,8 @@ class TaskLine implements Comparable {
     private final Set<FilterSpec> excludeFiles = new TreeSet<>();
     //the result record for this instance
     private Result r;
+    private int startposition;
+    private int endposition;
 
     /**
      * Create this task line from a Mapping
@@ -210,9 +213,22 @@ class TaskLine implements Comparable {
             return false;
         }
     }
+    
+    private void showBusyLine(File in, JTextArea progress) {
+        startposition = progress.getText().length();
+        String s = "Nu bezig met " + in.getPath() + " groot " + makeVolumeStr(in.length());
+        progress.append(s);
+        endposition = startposition + s.length();
+    }
+    
+    private void removeBusyLine(JTextArea progress) {
+        progress.replaceRange(null, startposition - 1, endposition);
+    }
 
     private boolean copyFile(File in, File out, long maxBandWidth, JTextArea progress) {
+        showBusyLine(in, progress);
         if (Routines.doFastCopy(in, out, maxBandWidth)) {
+            removeBusyLine(progress);
             long size = in.length();
             if (!MainFrame.stopOnmiddellijk) {
                 report("File " + in.getPath() + " (" + Routines.makeVolumeStr(size)
@@ -225,6 +241,7 @@ class TaskLine implements Comparable {
             r.size = r.size + size;
             return true;
         } else {
+            removeBusyLine(progress);
             progress.append("Fout bij kopieren " + in.getPath() + ", zie de log");
             r.errorCount++;
             return false;
@@ -489,8 +506,8 @@ class TaskLine implements Comparable {
     }
 
     /**
-     * Synchronize this TaskLine Return immediately if the destination needs to
-     * cleaned and this fails
+     * Synchronize this TaskLine 
+     * Return immediately if the destination needs to cleaned and this fails
      *
      * @param deleteSet Set of files to be deleted
      * @param progress the thread status window
