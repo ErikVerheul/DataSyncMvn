@@ -575,6 +575,14 @@ public class MainFrame extends JFrame {
     void jCheckBoxMenuItemCheckAccess_actionPerformed(ActionEvent e) {
         checkAccessToBronAndBestemming = jCheckBoxMenuItemCheckAccess.isSelected();
     }
+    
+    private void startBrowser(URI uri) {
+        try {
+            Desktop.getDesktop().browse(uri);
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, "Cannot show help file, exception = {0}", ex.getMessage());
+        }
+    }
 
     private void showHelp() {
         ClassLoader cl = MainFrame_AboutBox.class.getProtectionDomain().getClassLoader();
@@ -584,11 +592,7 @@ public class MainFrame extends JFrame {
             Files.copy(link, file.getAbsoluteFile().toPath());
             URI uri = file.toURI();
             if (Desktop.isDesktopSupported()) {
-                try {
-                    Desktop.getDesktop().browse(uri);
-                } catch (IOException ex) {
-                    LOGGER.log(Level.SEVERE, "Cannot show help file, exception = {0}", ex.getMessage());
-                }
+                startBrowser(uri);
             } else {
                 LOGGER.log(Level.SEVERE, "Cannot show help file, class Desktop not supported");
             }
