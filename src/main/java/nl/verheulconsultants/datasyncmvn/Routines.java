@@ -67,7 +67,7 @@ class Routines {
                     + "Error: program wordt gestopt",
                     "Initializatie fout " + e.toString(),
                     JOptionPane.ERROR_MESSAGE);
-            System.exit(1);
+            System.exit(1); //NOSONAR
         }
         loggerFileHandler.setFormatter(new SimpleFormatter());
         return loggerFileHandler;

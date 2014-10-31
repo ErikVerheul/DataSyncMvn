@@ -179,7 +179,7 @@ public class MainFrame extends JFrame {
                     "Programma is bezig",
                     JOptionPane.ERROR_MESSAGE);
         } else {
-            System.exit(0);
+            System.exit(0); //NOSONAR
         }
     }
 
@@ -427,16 +427,13 @@ public class MainFrame extends JFrame {
         LOGGER.info("****** Synchronisatie is gestart");
         threadIsRunning = true;
         final SwingWorker worker = new SwingWorker() {
-
             Result r = null;
-
             @Override
             public Object construct() {
                 r = task.sync(progress);
                 //return value not used by this program
                 return r;
             }
-
             @Override
             public void finished() {
                 threadIsRunning = false;
@@ -580,24 +577,23 @@ public class MainFrame extends JFrame {
     }
 
     private void showHelp() {
-        ClassLoader cl = MainFrame_AboutBox.class.getProtectionDomain().getClassLoader();      
+        ClassLoader cl = MainFrame_AboutBox.class.getProtectionDomain().getClassLoader();
         File file = new File("help.html");
-        InputStream link = (cl.getResourceAsStream("resources/Help.html"));
+        InputStream link = cl.getResourceAsStream("resources/Help.html");
         try {
             Files.copy(link, file.getAbsoluteFile().toPath());
-        } catch (IOException ex) {
-            System.err.println("Cannot show help file, exception = " + ex.getMessage());
-        }
-        URI uri = file.toURI();
-        
-        if (Desktop.isDesktopSupported()) {
-            try {
-                Desktop.getDesktop().browse(uri);
-            } catch (IOException ex) {
-                LOGGER.log(Level.SEVERE, "Cannot show help file, exception = {0}", ex.getMessage());
+            URI uri = file.toURI();
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    Desktop.getDesktop().browse(uri);
+                } catch (IOException ex) {
+                    LOGGER.log(Level.SEVERE, "Cannot show help file, exception = {0}", ex.getMessage());
+                }
+            } else {
+                LOGGER.log(Level.SEVERE, "Cannot show help file, class Desktop not supported");
             }
-        } else {
-            LOGGER.log(Level.SEVERE, "Cannot show help file, class Desktop not supported");
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, "Cannot show help file, exception = ", ex.getMessage());
         }
     }
 

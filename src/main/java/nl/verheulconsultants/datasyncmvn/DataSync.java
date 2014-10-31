@@ -67,31 +67,29 @@ public class DataSync {
         LOGGER.addHandler(loggerFileHandler);
         // Request that every detail gets logged.
         LOGGER.setLevel(Level.ALL);
-        
+
         runningWindows = System.getProperty("os.name").startsWith("Windows");
         //test for the JRE to be "1.4.2_03" or higher
         JREversion jREfound = new JREversion();
-        if (!jREfound.checkVersion()) {
+        if (jREfound.checkVersion()) {
+            MainFrame frame = new MainFrame();
+            //Validate frames that have preset sizes
+            //Pack frames that have useful preferred size info, e.g. from their layout
+            if (packFrame) {
+                frame.pack();
+            } else {
+                frame.validate();
+            }
+            Routines.centerAndShowFrame(frame);
+            LOGGER.log(Level.INFO, "Applicatie is gestart met default log file {0}", logFile.getPath());
+        } else {
             JOptionPane.showMessageDialog(null,
                     "U gebruikt de Java Runtime Environment " + jREfound.version
                     + "\nDit programma is getest op JRE versie 1.4.2_03"
                     + "\nGebruik JRE1.4.2_03 of hoger",
                     "Verkeerde Java Runtime Environment",
                     JOptionPane.ERROR_MESSAGE);
-            System.exit(1);
         }
-
-        MainFrame frame = new MainFrame();
-        //Validate frames that have preset sizes
-        //Pack frames that have useful preferred size info, e.g. from their layout
-        if (packFrame) {
-            frame.pack();
-        } else {
-            frame.validate();
-        }
-
-        Routines.centerAndShowFrame(frame);
-        LOGGER.log(Level.INFO, "Applicatie is gestart met default log file {0}", logFile.getPath());
     }
 
     public static void main(String[] args) {
