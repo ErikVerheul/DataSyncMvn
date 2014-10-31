@@ -6,6 +6,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.net.URI;
 import java.nio.file.Files;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -586,10 +587,10 @@ public class MainFrame extends JFrame {
 
     private void showHelp() {
         ClassLoader cl = MainFrame_AboutBox.class.getProtectionDomain().getClassLoader();
-        File file = new File("help.html");
+        File file = new File("Help.html");
         InputStream link = cl.getResourceAsStream("resources/Help.html");
         try {
-            Files.copy(link, file.getAbsoluteFile().toPath());
+            Files.copy(link, file.getAbsoluteFile().toPath(), REPLACE_EXISTING);
             URI uri = file.toURI();
             if (Desktop.isDesktopSupported()) {
                 startBrowser(uri);
@@ -597,8 +598,8 @@ public class MainFrame extends JFrame {
                 LOGGER.log(Level.SEVERE, "Cannot show help file, class Desktop not supported");
             }
         } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, "Cannot show help file, exception = ", ex.getMessage());
-        }
+            LOGGER.log(Level.SEVERE, "Cannot show help file, exception = ", ex);
+        }  
     }
 
     void jMenuItemToelichting_actionPerformed(ActionEvent e) {
