@@ -2,11 +2,9 @@ package nl.verheulconsultants.datasyncmvn;
 
 import java.io.*;
 import java.util.*;
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
-import static nl.verheulconsultants.datasyncmvn.DataSync.loggerFileHandler;
 import static nl.verheulconsultants.datasyncmvn.Routines.makeVolumeStr;
 
 /**
@@ -41,16 +39,6 @@ class TaskLine implements Comparable {
      * @param includeFilter the filter (can be empty)
      */
     TaskLine(Mapping map, FilterSpec includeFilter) {
-        // remove all handlers that will be replaced
-        // TODO: find out why this is necessary
-        Handler[] handlers = LOGGER.getHandlers();
-        for (Handler handler : handlers) {
-            LOGGER.removeHandler(handler);
-        }
-        // Send logger output to our FileHandler.
-        LOGGER.addHandler(loggerFileHandler);
-        // Request that every detail gets logged.
-        LOGGER.setLevel(Level.ALL);
         this.map = map;
         this.includeFilter = includeFilter;
     }

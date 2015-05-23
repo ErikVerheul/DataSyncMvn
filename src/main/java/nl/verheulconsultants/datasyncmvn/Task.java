@@ -1,12 +1,10 @@
 package nl.verheulconsultants.datasyncmvn;
 
-import static nl.verheulconsultants.datasyncmvn.DataSync.loggerFileHandler;
+import org.apache.log4j.Logger;
 import static nl.verheulconsultants.datasyncmvn.Routines.stringsEqual;
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 import java.io.*;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 
 
@@ -47,10 +45,6 @@ class Task {
      * @param statusBar the main Windows statusbar
      */
     public Task(File mappingTabel, JTextArea statusBar) {
-        // Send logger output to our FileHandler.
-        LOGGER.addHandler(loggerFileHandler);
-        // Request that every detail gets logged.
-        LOGGER.setLevel(Level.ALL);
         this.mappingTabel = mappingTabel;
         this.statusBar = statusBar;
         regels = new ArrayList<>();
@@ -579,7 +573,7 @@ class Task {
     }
 
     private Result doCompare(JTextArea progressWindow, TaskLine x) {
-        LOGGER.log(Level.INFO, "Start vergelijking tussen Bron {0} en Bestemming {1}", new Object[]{x.getBronNameWithWildCard(), x.getBestemming()});
+        LOGGER.info("Start vergelijking tussen Bron " + x.getBronNameWithWildCard() + " en Bestemming " + x.getBestemming());
         progressWindow.append("Start vergelijking tussen Bron " + x.getBronNameWithWildCard() + " en Bestemming " + x.getBestemming());
         Result r = x.vergelijk(progressWindow);
         String msg = "Gereed met Bron " + x.getBronNameWithWildCard() + ". Aantal files vergeleken " + r.fileCount
@@ -592,13 +586,13 @@ class Task {
         String s3 = "Bestemming files nieuwer dan bron: " + r.fileCountDestNewer;
         String s4 = "Aantal te verwijderen bron files: " + r.sourceFilesToBeDeleted;
         LOGGER.info(msg);
-        LOGGER.log(Level.INFO, "{0}, {1}, {2}, {3}", new Object[]{s1, s2, s3, s4});
+        LOGGER.info(s1 + ", " + s2 + ", " + s3 + ", " + s4);
         progressWindow.append(msg + "\n     " + s1 + "\n     " + s2 + "\n     " + s3 + "\n     " + s4 + "\n");
         return r;
     }
 
     private Result doSync(JTextArea progressWindow, TaskLine x) {
-        LOGGER.log(Level.INFO, "Start synchronisatie tussen Bron {0} en Bestemming {1}", new Object[]{x.getBronNameWithWildCard(), x.getBestemming()});
+        LOGGER.info("Start synchronisatie tussen Bron " + x.getBronNameWithWildCard() + " en Bestemming " + x.getBestemming());
         progressWindow.append("Start synchronisatie tussen Bron " + x.getBronNameWithWildCard() + " en Bestemming " + x.getBestemming());
         Result r = x.sync(progressWindow);
         String msg = "Gereed met Bron " + x.getBronNameWithWildCard() + ". Aantal files vergeleken " + r.fileCount
@@ -612,7 +606,7 @@ class Task {
         String s4 = "Aantal verwijderde bron files: " + r.sourceFilesDeleted;
         String s5 = "Vooraf verwijderde bestemming files en subdirectories: " + r.targetFilesDeleted;
         LOGGER.info(msg);
-        LOGGER.log(Level.INFO, "{0}, {1}, {2}, {3}, {4}", new Object[]{s1, s2, s3, s4, s5});
+        LOGGER.info(s1 + ", " + s2 + ", " + s3 + ", " + s4 + ", " + s5);
         progressWindow.append(msg + "\n     " + s1 + "\n     " + s2 + "\n     " + s3 + "\n     " + s4 + "\n     " + s5 + "\n");
         return r;
     }

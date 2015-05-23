@@ -1,7 +1,6 @@
 package nl.verheulconsultants.datasyncmvn;
-import static nl.verheulconsultants.datasyncmvn.DataSync.loggerFileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.log4j.Logger;
 
 /**
  * File or directory filter specification
@@ -21,10 +20,6 @@ public class FilterSpec implements Comparable {
     boolean ignoreCase;
 
     public FilterSpec(String pathWildCard, boolean filterDirectories, boolean filterFiles, boolean continueWithSubdirectories, boolean ignoreCase) {
-        // Send logger output to our FileHandler.
-        LOGGER.addHandler(loggerFileHandler);
-        // Request that every detail gets logged.
-        LOGGER.setLevel(Level.ALL);
         this.pathWildCard = pathWildCard;
         int pos = pathWildCard.lastIndexOf('\\');
         //split the path from the wildcard

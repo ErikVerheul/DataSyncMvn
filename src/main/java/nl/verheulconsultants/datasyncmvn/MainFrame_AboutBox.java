@@ -24,8 +24,8 @@ public class MainFrame_AboutBox extends JDialog implements ActionListener {
   FlowLayout flowLayout1 = new FlowLayout();
   GridLayout gridLayout1 = new GridLayout();
   String product = "DataSync";
-  String version = "1.40";
-  String copyright = "Copyright Verheul Consultants(c) 2004-2014";
+  String version = "1.50";
+  String copyright = "Copyright Verheul Consultants(c) 2004-2015";
   String comments = "Data synchronisation tool";
   String support = "Voor support mail erik@verheulconsultants.nl";
   public MainFrame_AboutBox(Frame parent) {
@@ -35,8 +35,8 @@ public class MainFrame_AboutBox extends JDialog implements ActionListener {
   }
   //Component initialization
   private void jbInit()  {
-    ClassLoader cl = MainFrame_AboutBox.class.getProtectionDomain().getClassLoader();
-    URL url = cl.getResource("resources/ocean.png");
+    ClassLoader cl = this.getClass().getProtectionDomain().getClassLoader();
+    URL url = cl.getResource("ocean.png");
     image1 = new ImageIcon(url);
     imageLabel.setIcon(image1);
     this.setTitle("About");

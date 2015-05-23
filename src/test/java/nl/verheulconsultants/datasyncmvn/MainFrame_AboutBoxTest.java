@@ -44,33 +44,9 @@ public class MainFrame_AboutBoxTest {
     @Test
     public void testReadImage() {
         System.out.println("testReadImage");
-        ClassLoader cl = MainFrame_AboutBox.class.getProtectionDomain().getClassLoader();
-        URL url = cl.getResource("resources/ocean.png");
+        ClassLoader cl = this.getClass().getProtectionDomain().getClassLoader();
+        URL url = cl.getResource("ocean.png");
         assertFalse("The url could not be found", url == null);
     }
 
-//    /**
-//     * Test of cancel method, of class MainFrame_AboutBox.
-//     */
-//    @Test
-//    public void testCancel() {
-//        System.out.println("cancel");
-//        MainFrame_AboutBox instance = null;
-//        instance.cancel();
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of actionPerformed method, of class MainFrame_AboutBox.
-//     */
-//    @Test
-//    public void testActionPerformed() {
-//        System.out.println("actionPerformed");
-//        ActionEvent e = null;
-//        MainFrame_AboutBox instance = null;
-//        instance.actionPerformed(e);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
 }

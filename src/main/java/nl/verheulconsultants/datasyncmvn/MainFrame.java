@@ -1,16 +1,15 @@
 package nl.verheulconsultants.datasyncmvn;
 
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
+import org.apache.log4j.Logger;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.URI;
 import java.nio.file.Files;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
-import static nl.verheulconsultants.datasyncmvn.DataSync.loggerFileHandler;
+import org.apache.log4j.RollingFileAppender;
 
 /**
  * The GUI interface
@@ -60,10 +59,6 @@ public class MainFrame extends JFrame {
 
     //Construct the frame
     public MainFrame() {
-        // Send logger output to our FileHandler.
-        LOGGER.addHandler(loggerFileHandler);
-        // Request that every detail gets logged.
-        LOGGER.setLevel(Level.ALL);
         enableEvents(AWTEvent.WINDOW_EVENT_MASK);
         jbInit();
     }
@@ -256,11 +251,10 @@ public class MainFrame extends JFrame {
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 String newLogPath = fs.getSelectedFile().getPath() + System.getProperty("file.separator") + name;
                 if (!Routines.stringsEqual(newLogPath, DataSync.logFile.getPath(), DataSync.runningWindows)) {
-                    LOGGER.log(Level.INFO, "Log file veranderd van {0} naar {1}", new Object[]{DataSync.logFile.getPath(), newLogPath});
-                    loggerFileHandler.close();
-                    LOGGER.removeHandler(loggerFileHandler);
-                    loggerFileHandler = Routines.createFileHandler(newLogPath);
-                    LOGGER.addHandler(loggerFileHandler);
+                    LOGGER.info("Log file veranderd van " + DataSync.logFile.getPath() + " naar " + newLogPath);
+                    RollingFileAppender appndr = (RollingFileAppender)Logger.getRootLogger().getAppender("file");
+                    appndr.setFile(newLogPath);
+                    appndr.activateOptions();
                     DataSync.logFile = new File(newLogPath);
                     LOGGER.info("Start logging...");
                 }
@@ -286,7 +280,7 @@ public class MainFrame extends JFrame {
     }
 
     private void warning(String s) {
-        LOGGER.warning(s);
+        LOGGER.warn(s);
         statusBar.append(s + "\n");
     }
 
@@ -399,7 +393,7 @@ public class MainFrame extends JFrame {
                 statusBar.append("'STOP na bron' door gebruiker na " + r.stopLocation + "\n");
                 break;
             default:
-                LOGGER.log(Level.WARNING, "Stop message expected but not found");
+                LOGGER.warn("Stop message expected but not found");
                 break;
         }
     }
@@ -419,7 +413,7 @@ public class MainFrame extends JFrame {
         String s3 = "Bestemming files nieuwer dan bron (niet gesynchroniseerd): " + r.fileCountDestNewer;
         String s4 = "Aantal verwijderde bron files: " + r.sourceFilesDeleted;
         LOGGER.info(msg);
-        LOGGER.log(Level.INFO, "{0}, {1}, {2}, {3}", new Object[]{s1, s2, s3, s4});
+        LOGGER.info(s1 + ", " + s2 + ", " + s3 + ", " + s4);
         progress.append(msg + "\n     " + s1 + "\n     " + s2 + "\n     " + s3 + "\n     " + s4 + "\n");
     }
 
@@ -429,12 +423,14 @@ public class MainFrame extends JFrame {
         threadIsRunning = true;
         final SwingWorker worker = new SwingWorker() {
             Result r = null;
+
             @Override
             public Object construct() {
                 r = task.sync(progress);
                 //return value not used by this program
                 return r;
             }
+
             @Override
             public void finished() {
                 threadIsRunning = false;
@@ -466,7 +462,7 @@ public class MainFrame extends JFrame {
                 + ", waarvan mogelijk te synchroniseren: " + r.fileCountSourceNewerSynct;
         String s3 = "Bestemming files nieuwer dan bron (niet te synchroniseren): " + r.fileCountDestNewer;
         LOGGER.info(msg);
-        LOGGER.log(Level.INFO, "{0}, {1}, {2}", new Object[]{s1, s2, s3});
+        LOGGER.info(s1 + ", " + s2 + ", " + s3);
         progress.append(msg + "\n     " + s1 + "\n     " + s2 + "\n     " + s3 + "\n");
     }
 
@@ -576,30 +572,30 @@ public class MainFrame extends JFrame {
     void jCheckBoxMenuItemCheckAccess_actionPerformed(ActionEvent e) {
         checkAccessToBronAndBestemming = jCheckBoxMenuItemCheckAccess.isSelected();
     }
-    
+
     private void startBrowser(URI uri) {
         try {
             Desktop.getDesktop().browse(uri);
         } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, "Cannot show help file, exception = {0}", ex.getMessage());
+            LOGGER.trace("Cannot show help file, exception = {0}", ex);
         }
     }
 
     private void showHelp() {
-        ClassLoader cl = MainFrame_AboutBox.class.getProtectionDomain().getClassLoader();
+        ClassLoader cl = this.getClass().getProtectionDomain().getClassLoader();
         File file = new File("Help.html");
-        InputStream link = cl.getResourceAsStream("resources/Help.html");
+        InputStream link = cl.getResourceAsStream("Help.html");
         try {
             Files.copy(link, file.getAbsoluteFile().toPath(), REPLACE_EXISTING);
             URI uri = file.toURI();
             if (Desktop.isDesktopSupported()) {
                 startBrowser(uri);
             } else {
-                LOGGER.log(Level.SEVERE, "Cannot show help file, class Desktop not supported");
+                LOGGER.fatal("Cannot show help file, class Desktop not supported");
             }
         } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, "Cannot show help file, exception = ", ex);
-        }  
+            LOGGER.trace("Cannot show help file, exception = ", ex);
+        }
     }
 
     void jMenuItemToelichting_actionPerformed(ActionEvent e) {

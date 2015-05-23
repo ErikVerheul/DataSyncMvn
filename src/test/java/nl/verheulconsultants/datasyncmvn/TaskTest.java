@@ -1,6 +1,5 @@
 package nl.verheulconsultants.datasyncmvn;
 
-import static nl.verheulconsultants.datasyncmvn.DataSync.loggerFileHandler;
 import java.io.File;
 import javax.swing.JTextArea;
 import org.junit.After;
@@ -29,9 +28,7 @@ public class TaskTest {
 
     @Before
     public void setUp() {
-        File logFile = Routines.openDefaultLogFile();
-        //must initiate a logggerFileHandler when calling methods from class Routines which do logging
-        loggerFileHandler = Routines.createFileHandler(logFile.getPath());
+        
     }
 
     @After

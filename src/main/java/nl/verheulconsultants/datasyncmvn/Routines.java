@@ -1,15 +1,11 @@
 package nl.verheulconsultants.datasyncmvn;
 
-import static nl.verheulconsultants.datasyncmvn.DataSync.loggerFileHandler;
+import org.apache.log4j.Logger;
 import java.awt.*;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.channels.FileChannel;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 import javax.swing.*;
 
 /**
@@ -18,25 +14,10 @@ import javax.swing.*;
 class Routines {
 
     private static final Logger LOGGER = Logger.getLogger(Routines.class.getName());
-    private static boolean loggingIsInitiated = false;
 
     // Prevent this class from being instantiated
     private Routines() {
 
-    }
-
-    /**
-     * Any method that does logging must call this routine to make sure logging
-     * is initiated.
-     */
-    private static void initiateLogging() {
-        if (!loggingIsInitiated) {
-            // Send logger output to our FileHandler.
-            LOGGER.addHandler(loggerFileHandler);
-            // Request that every detail gets logged.
-            LOGGER.setLevel(Level.ALL);
-            loggingIsInitiated = true;
-        }
     }
 
     /**
@@ -48,29 +29,6 @@ class Routines {
         String separator = System.getProperty("file.separator");
         String userHome = System.getProperty("user.home");
         return new File(userHome + separator + "DataSync_default.log");
-    }
-
-    /**
-     * Open or create a logFile file with file name
-     *
-     * @param logger the logFileger object
-     * @param logFileName the logFileger File name
-     * @return the logFile FileHandler
-     */
-    static final FileHandler createFileHandler(String logFileName) {
-        loggerFileHandler = null;
-        try {
-            loggerFileHandler = new FileHandler(logFileName, true);
-        } catch (IOException | SecurityException e) {
-            JOptionPane.showMessageDialog(null,
-                    "Kan geen file handler for logging aanmaken "
-                    + "Error: program wordt gestopt",
-                    "Initializatie fout " + e.toString(),
-                    JOptionPane.ERROR_MESSAGE);
-            System.exit(1); //NOSONAR
-        }
-        loggerFileHandler.setFormatter(new SimpleFormatter());
-        return loggerFileHandler;
     }
 
     /**
@@ -198,11 +156,10 @@ class Routines {
      * @param ms the sleep time
      */
     static void waitMilis(long ms) {
-        initiateLogging();
         try {
             Thread.sleep(ms);
         } catch (InterruptedException e) {
-            LOGGER.warning("waitMilis is interrupted");
+            LOGGER.warn("waitMilis is interrupted");
         }
     }
 
@@ -213,11 +170,10 @@ class Routines {
      * @param file
      */
     static void reapplyReadOnly(File file) {
-        initiateLogging();
         if (file.setReadOnly()) {
-            LOGGER.log(Level.INFO, "Read-only attribuut op file {0} is hersteld", file.getPath());
+            LOGGER.info("Read-only attribuut op file {0} is hersteld " + file.getPath());
         } else {
-            LOGGER.log(Level.SEVERE, "Kan Read-only attribuut van file {0} niet herstellen", new Object[]{file.getPath()});
+            LOGGER.fatal("Kan Read-only attribuut van file " + file.getPath() + " niet herstellen");
         }
     }
 
@@ -234,13 +190,12 @@ class Routines {
      * @return true if read access possible
      */
     static boolean canReadFromFile(File file, String subject) {
-        initiateLogging();
         try {
             FileInputStream fis = new FileInputStream(file);
             fis.close();
             return true;
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Geen leestoegang tot {0} file {1} ,error = {2}", new Object[]{subject, file.getPath(), e.toString()});
+            LOGGER.fatal("Geen leestoegang tot " + subject + " file " + file.getPath() + " ,error = " + e.toString());
             return false;
         }
     }
@@ -252,14 +207,13 @@ class Routines {
      * @return true if successful
      */
     static boolean removeReadOnly(File file, String subject) {
-        initiateLogging();
         JREversion jre = new JREversion();
         if (!canReadFromFile(file, subject)) {
             return false;
         }
         if (jre.medium >= 6) {
             if (file.setReadable(true)) {
-                LOGGER.log(Level.INFO, "Read-only attribuut van file {0} is verwijderd", file.getPath());
+                LOGGER.info("Read-only attribuut van file " + file.getPath() + " is verwijderd");
                 return true;
             }
             return false;
@@ -267,14 +221,14 @@ class Routines {
             try {
                 Process proc = Runtime.getRuntime().exec("attrib.exe " + file.getPath() + " -r");
                 proc.waitFor();
-                LOGGER.log(Level.INFO, "Read-only attribuut van file {0} is verwijderd met attrib.exe", file.getPath());
+                LOGGER.info("Read-only attribuut van file " + file.getPath() + " is verwijderd met attrib.exe");
                 return true;
             } catch (IOException | InterruptedException e) {
-                LOGGER.log(Level.SEVERE, "Kan attrib.exe {0}" + " -r" + " niet starten. Fout = " + "{1}", new Object[]{file.getPath(), e.toString()});
+                LOGGER.fatal("Kan attrib.exe " + file.getPath() + " -r" + " niet starten. Fout = " + e.toString());
                 return false;
             }
         } else {
-            LOGGER.log(Level.SEVERE, "Kan read-only attribuut niet verwijderen op deze Jave Runtime met versie {0} , gebruik Java 6 of hoger.", new Object[]{jre});
+            LOGGER.fatal("Kan read-only attribuut niet verwijderen op deze Jave Runtime met versie " + jre + " , gebruik Java 6 of hoger.");
             return false;
         }
     }
@@ -305,9 +259,7 @@ class Routines {
     }
 
     private static void logWriteToFileError(File file, Exception e) {
-        initiateLogging();
-        LOGGER.log(Level.SEVERE, "Geen schrijftoegang tot Bestemming " + " file "
-                + "{0} ,error = {1}", new Object[]{file.getPath(), e.toString()});
+        LOGGER.fatal("Geen schrijftoegang tot Bestemming file " + file.getPath() + ", error = " + e.toString());
     }
 
     /**
@@ -363,11 +315,10 @@ class Routines {
      * @return true if a file list can be retrieved
      */
     static boolean canAccessDir(File dir, String subject) {
-        initiateLogging();
         if (dir.list() != null) {
             return true;
         } else {
-            LOGGER.log(Level.SEVERE, "Geen toegang tot {0} directory {1}", new Object[]{subject, dir.getPath()});
+            LOGGER.fatal("Geen toegang tot " + subject + " directory " + dir.getPath());
             return false;
         }
     }
@@ -381,15 +332,14 @@ class Routines {
      * @return true if a file can be created under the directory
      */
     static boolean canWriteInDir(File dir, String subject) {
-        initiateLogging();
         try {
             File tmpFile = java.io.File.createTempFile("gaklFbA6FsWU", null, dir);
             if (!tmpFile.delete()) {
-                LOGGER.log(Level.SEVERE, "Kon tijdelijke file {0} niet verwijderen", tmpFile);
+                LOGGER.fatal("Kon tijdelijke file " + tmpFile + " niet verwijderen");
             }
             return true;
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Kan niet schrijven in {0} directory {1} ,error = {2}", new Object[]{subject, dir.getPath(), e.toString()});
+            LOGGER.fatal("Kan niet schrijven in " + subject + " directory " + dir.getPath() + ", error = " + e.toString());
             return false;
         }
     }
@@ -420,31 +370,30 @@ class Routines {
      * otherwise.
      */
     static boolean cleanDirectory(File dir, Result r) {
-        initiateLogging();
         if (dir.isFile()) {
-            LOGGER.log(Level.SEVERE, "{0} is geen directory, maar een file.", dir);
+            LOGGER.fatal(dir + " is geen directory, maar een file.");
             return false;
         }
         File[] files = dir.listFiles();
         if (files == null) {
-            LOGGER.log(Level.SEVERE, "Kan de directory {0} niet openen.", dir);
+            LOGGER.fatal("Kan de directory " + dir + " niet openen.");
             return false;
         }
-        LOGGER.log(Level.INFO, "{0} Bestanden en subdirectories worden verwijderd van directory {1}.", new Object[]{files.length, dir});
+        LOGGER.info(files.length + " Bestanden en subdirectories worden verwijderd van directory " + dir);
         for (File file : files) {
             if (file.isDirectory()) {
                 cleanDirectory(file, r);
                 if (file.delete()) {
                     r.targetFilesDeleted++;
                 } else {
-                    LOGGER.log(Level.WARNING, "Kan de subdirectory {0} niet verwijderen.", file);
+                    LOGGER.warn("Kan de subdirectory " + file + " niet verwijderen.");
                     r.errorCount++;
                 }
             } else {
                 if (file.delete()) {
                     r.targetFilesDeleted++;
                 } else {
-                    LOGGER.log(Level.WARNING, "Kan file {0} niet verwijderen.", file);
+                    LOGGER.warn("Kan file " + file + " niet verwijderen.");
                     r.errorCount++;
                 }
             }
@@ -482,7 +431,6 @@ class Routines {
      * @return true if no error
      */
     static boolean doFastCopy(File source, File target, long maxBandWidth) {
-        initiateLogging();
         long orgDate = source.lastModified();
         // Limit the copy size to 5 MB to prevent the 'Cannot map' or 'Insufficient system resources' exception.
         // 5 MB turned out a good value for a smooth copying under Windows.
@@ -514,7 +462,7 @@ class Routines {
                 if (target.delete()) {
                     return true;
                 } else {
-                    LOGGER.log(Level.SEVERE, "Kan de target file {0} niet verwijderen", target);
+                    LOGGER.fatal("Kan de target file " + target + " niet verwijderen");
                     return false;
                 }
             } else {
@@ -522,12 +470,12 @@ class Routines {
                 if (target.setLastModified(orgDate)) {
                     return true;
                 } else {
-                    LOGGER.log(Level.SEVERE, "Kan 'Last Modified' datum van file {0} niet terugzetten", target);
+                    LOGGER.fatal("Kan 'Last Modified' datum van file " + target + " niet terugzetten");
                     return false;
                 }
             }
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Fout bij kopieren {0} naar {1} error {2}", new Object[]{source.getPath(), target.getPath(), e.toString()});
+            LOGGER.fatal("Fout bij kopieren " + source.getPath() + " naar " + target.getPath() + " error  " + e.toString());
             return false;
         }
     }

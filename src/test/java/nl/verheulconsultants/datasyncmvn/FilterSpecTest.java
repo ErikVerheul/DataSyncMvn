@@ -5,8 +5,6 @@
 
 package nl.verheulconsultants.datasyncmvn;
 
-import static nl.verheulconsultants.datasyncmvn.DataSync.loggerFileHandler;
-import java.io.File;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -33,9 +31,7 @@ public class FilterSpecTest {
 
     @Before
     public void setUp() {
-        File logFile = Routines.openDefaultLogFile();
-        //must initiate a logggerFileHandler when calling methods from class Routines which do logging
-        loggerFileHandler = Routines.createFileHandler(logFile.getPath());
+
     }
 
     @After

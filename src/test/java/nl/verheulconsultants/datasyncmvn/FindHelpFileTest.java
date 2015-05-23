@@ -44,10 +44,10 @@ public class FindHelpFileTest {
     @Test
     public void findHelpFile() {
         System.out.println("findHelpFile");
-        ClassLoader cl = MainFrame_AboutBox.class.getProtectionDomain().getClassLoader();
+        ClassLoader cl = this.getClass().getProtectionDomain().getClassLoader();
         
         File file = new File("help.html");
-        InputStream link = (cl.getResourceAsStream("resources/Help.html"));
+        InputStream link = (cl.getResourceAsStream("Help.html"));
         try {
             Files.copy(link, file.getAbsoluteFile().toPath());
             assertTrue("The help file does not exist", file.exists());

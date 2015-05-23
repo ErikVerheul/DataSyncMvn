@@ -1,6 +1,5 @@
 package nl.verheulconsultants.datasyncmvn;
 
-import static nl.verheulconsultants.datasyncmvn.DataSync.loggerFileHandler;
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 import java.io.File;
 import java.io.IOException;
@@ -35,10 +34,7 @@ public class RoutinesTest {
     }
 
     @Before
-    public void setUp() throws Exception {
-        File logFile = Routines.openDefaultLogFile();
-        //must initiate a logggerFileHandler when calling methods from class Routines which do logging
-        loggerFileHandler = Routines.createFileHandler(logFile.getPath());
+    public void setUp() throws Exception {      
         tempFile = File.createTempFile("testfile", ".tmp");
     }
 

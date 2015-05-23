@@ -1,11 +1,11 @@
 package nl.verheulconsultants.datasyncmvn;
 
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
+import org.apache.log4j.Logger;
 import java.io.*;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Properties;
 import javax.swing.*;
+import org.apache.log4j.FileAppender;
 
 /**
  * Title: DataSync. Description: Data synchronisation tool. Copyright: Copyright
@@ -35,13 +35,12 @@ import javax.swing.*;
  * hoeveel files/data het gaat. Na een kopieerslag kan worden geverifieerd welke
  * files nog niet zijn gekopieerd.
  *
- * Overige functies: Kopieren van geselecteerde directories m�t inhoud Kopieren
- * van files op filenaam met behulp van wildcard Kopieren van files van
- * verschillende bron directories naar ��n bestemmingsdirectorie. Verwijderen
+ * Overige functies: Kopieren van geselecteerde directories met inhoud. Kopieren
+ * van files op filenaam met behulp van wildcard. Kopieren van files van
+ * verschillende bron directories naar een bestemmingsdirectorie. Verwijderen
  * van gekopieerde of oudere bron files
  *
  * @author Erik Verheul
- * @version 1.40
  */
 public class DataSync {
 
@@ -52,22 +51,10 @@ public class DataSync {
     static File logFile;
     static boolean runningWindows;
     private static final Logger LOGGER = Logger.getLogger(DataSync.class.getName());
-    /**
-     * the logFileging file handler
-     */
-    static FileHandler loggerFileHandler;
 
     //Construct the application
     @SuppressWarnings({"DM_EXIT", "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD"})
     public DataSync() {
-        logFile = Routines.openDefaultLogFile();
-        //open or create a logFile file
-        loggerFileHandler = Routines.createFileHandler(logFile.getPath());
-        // Send logger output to our FileHandler.
-        LOGGER.addHandler(loggerFileHandler);
-        // Request that every detail gets logged.
-        LOGGER.setLevel(Level.ALL);
-
         runningWindows = System.getProperty("os.name").startsWith("Windows");
         //test for the JRE to be "1.4.2_03" or higher
         JREversion jREfound = new JREversion();
@@ -81,7 +68,19 @@ public class DataSync {
                 frame.validate();
             }
             Routines.centerAndShowFrame(frame);
-            LOGGER.log(Level.INFO, "Applicatie is gestart met default log file {0}", logFile.getPath());
+
+            // get the default logfile
+            Properties prop = new Properties();
+
+            try (InputStream input = this.getClass().getClassLoader().getResourceAsStream("log4j.properties")) {
+                // load a properties file
+                prop.load(input);
+                // get the property value
+                logFile = new File(prop.getProperty("log4j.appender.file.File"));
+            } catch (IOException ex) {
+                ex.printStackTrace(); //NOSONAR
+            }
+            LOGGER.info("Applicatie is gestart met default log file " + logFile.getPath());
         } else {
             JOptionPane.showMessageDialog(null,
                     "U gebruikt de Java Runtime Environment " + jREfound.version
@@ -96,7 +95,7 @@ public class DataSync {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            LOGGER.log(Level.WARNING, "Kan systeem look-en-feel niet instellen. Fout:{0}", e);
+            LOGGER.warn("Kan systeem look-en-feel niet instellen. Fout: ", e);
         }
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.

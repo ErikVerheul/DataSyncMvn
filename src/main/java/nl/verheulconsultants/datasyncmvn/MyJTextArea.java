@@ -4,12 +4,12 @@ import javax.swing.JTextArea;
 
 /**
  * Subclass of javax.swing.JTextArea
- * Only reimplement the two basic constructors
+ * Only re-implement the two basic constructors
  * Override append
  */
 class MyJTextArea extends JTextArea {
 
-    private int maxLines = 60000;
+    private final int maxLines = 60000;
 
     public MyJTextArea() {
         super();
