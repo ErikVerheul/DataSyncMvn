@@ -9,7 +9,7 @@ import javax.swing.JTextArea;
  */
 class MyJTextArea extends JTextArea {
 
-    private final static int maxLines = 60000;
+    private static final int MAXLINES = 60000;
 
     public MyJTextArea() {
         super();
@@ -27,10 +27,10 @@ class MyJTextArea extends JTextArea {
      */
     @Override
     public void append(String str) {
-        if (this.getLineCount() < maxLines) {
+        if (this.getLineCount() < MAXLINES) {
             super.append(str + "\n");
-        } else if (this.getLineCount() == maxLines) {
-            super.append("Maximum van " + maxLines + " aantal regels bereikt. Stop met weergeven in dit venster. Zie verder in de log\n");
+        } else if (this.getLineCount() == MAXLINES) {
+            super.append("Maximum van " + MAXLINES + " aantal regels bereikt. Stop met weergeven in dit venster. Zie verder in de log\n");
         }
     }
 }

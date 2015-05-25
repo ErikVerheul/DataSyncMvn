@@ -5,7 +5,7 @@ import java.awt.event.*;
 import java.net.URL;
 import javax.swing.*;
 
-public class MainFrame_AboutBox extends JDialog implements ActionListener {
+class MainFrame_AboutBox extends JDialog implements ActionListener {
 
   JPanel panel1 = new JPanel();
   JPanel panel2 = new JPanel();
@@ -28,7 +28,8 @@ public class MainFrame_AboutBox extends JDialog implements ActionListener {
   String copyright = "Copyright Verheul Consultants(c) 2004-2015";
   String comments = "Data synchronisation tool";
   String support = "Voor support mail erik@verheulconsultants.nl";
-  public MainFrame_AboutBox(Frame parent) {
+  
+  MainFrame_AboutBox(Frame parent) {
     super(parent);
     enableEvents(AWTEvent.WINDOW_EVENT_MASK);
     jbInit();

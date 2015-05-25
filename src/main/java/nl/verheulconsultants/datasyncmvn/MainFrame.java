@@ -14,7 +14,7 @@ import org.apache.log4j.RollingFileAppender;
 /**
  * The GUI interface
  */
-public class MainFrame extends JFrame {
+class MainFrame extends JFrame {
 
     private static final Logger LOGGER = Logger.getLogger(MainFrame.class.getName());
     //Use the console to select for serious debugging
@@ -58,7 +58,7 @@ public class MainFrame extends JFrame {
     String dialogFont = "Dialog";
 
     //Construct the frame
-    public MainFrame() {
+    MainFrame() {
         enableEvents(AWTEvent.WINDOW_EVENT_MASK);
         jbInit();
     }

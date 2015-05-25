@@ -44,7 +44,7 @@ class Task {
      * @param mappingTabel the File containing the mapping table
      * @param statusBar the main Windows statusbar
      */
-    public Task(File mappingTabel, JTextArea statusBar) {
+    Task(File mappingTabel, JTextArea statusBar) {
         this.mappingTabel = mappingTabel;
         this.statusBar = statusBar;
         regels = new ArrayList<>();
@@ -664,7 +664,7 @@ class Task {
      * @param progressWindow the thread status window
      * @return the Result record
      */
-    public Result vergelijk(JTextArea progressWindow) {
+    Result vergelijk(JTextArea progressWindow) {
         progressWindow.append("Vergelijking is gestart\n"
                 + "Let op: de vergelijking gaat er vanuit dat bij de synchronisatie: \n"
                 + "- de creatie van nieuwe directories mogelijk is of\n"
@@ -679,7 +679,7 @@ class Task {
      * @param progressWindow the thread status window
      * @return the Result record
      */
-    public Result sync(JTextArea progressWindow) {
+    Result sync(JTextArea progressWindow) {
         progressWindow.append("Synchronisatie is gestart");
         return process(DO_SYNC, progressWindow);
     }

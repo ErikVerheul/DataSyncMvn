@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 /**
  * File or directory filter specification
  */
-public class FilterSpec implements Comparable {
+class FilterSpec implements Comparable {
 
     private static final Logger LOGGER = Logger.getLogger(FilterSpec.class.getName());
     //path+wildcard
@@ -19,7 +19,7 @@ public class FilterSpec implements Comparable {
     boolean continueWithSubdirectories;
     boolean ignoreCase;
 
-    public FilterSpec(String pathWildCard, boolean filterDirectories, boolean filterFiles, boolean continueWithSubdirectories, boolean ignoreCase) {
+    FilterSpec(String pathWildCard, boolean filterDirectories, boolean filterFiles, boolean continueWithSubdirectories, boolean ignoreCase) {
         this.pathWildCard = pathWildCard;
         int pos = pathWildCard.lastIndexOf('\\');
         //split the path from the wildcard

@@ -18,7 +18,7 @@ class Mapping implements Comparable {
     boolean dumpFiles;
     boolean ignoreCase;
 
-    public Mapping(String bron, String bestemming, boolean maakBestemmingSchoon, boolean verwijderBron, long maxBandWidth, long dataLimit,
+    Mapping(String bron, String bestemming, boolean maakBestemmingSchoon, boolean verwijderBron, long maxBandWidth, long dataLimit,
             int maxErrors, boolean dumpFiles, boolean ignoreCase) {
         this.bron = bron;
         this.bestemming = bestemming;
@@ -37,7 +37,7 @@ class Mapping implements Comparable {
      * @param bestemming the destination file or directory name
      * @param oldMapping an existing map
      */
-    public Mapping(String bron, String bestemming, Mapping oldMapping) {
+    Mapping(String bron, String bestemming, Mapping oldMapping) {
         this.bron = bron;
         this.bestemming = bestemming;
         this.maakBestemmingSchoon = oldMapping.maakBestemmingSchoon;
