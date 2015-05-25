@@ -2,8 +2,7 @@ package nl.verheulconsultants.datasyncmvn;
 
 import java.io.*;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import javax.swing.*;
 import static nl.verheulconsultants.datasyncmvn.Routines.makeVolumeStr;
 
@@ -137,11 +136,11 @@ class TaskLine implements Comparable {
                 r.reportLinesCount++;
             }
         } else if (belang == WARNING) {
-            LOGGER.warning(s);
+            LOGGER.warn(s);
             progress.append(s);
             r.reportLinesCount++;
         } else if (belang == SEVERE) {
-            LOGGER.severe(s);
+            LOGGER.fatal(s);
             progress.append(s);
             r.reportLinesCount++;
         } else if (belang == LOG_ONLY) {
@@ -317,7 +316,7 @@ class TaskLine implements Comparable {
         if (actie == DO_SYNC && file.delete()) {
             r.sourceFilesDeleted++;
         } else {
-            LOGGER.log(Level.WARNING, "Fout: Kan bron file {0} niet verwijderen.", file);
+            LOGGER.warn("Fout: Kan bron file " + file + " niet verwijderen.");
             r.errorCount++;
         }
     }
