@@ -5,7 +5,6 @@ import org.apache.log4j.Logger;
 import java.io.*;
 import java.util.Properties;
 import javax.swing.*;
-import org.apache.log4j.FileAppender;
 
 /**
  * Title: DataSync. Description: Data synchronisation tool. Copyright: Copyright

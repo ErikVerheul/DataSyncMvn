@@ -423,14 +423,12 @@ public class MainFrame extends JFrame {
         threadIsRunning = true;
         final SwingWorker worker = new SwingWorker() {
             Result r = null;
-
             @Override
             public Object construct() {
                 r = task.sync(progress);
                 //return value not used by this program
                 return r;
             }
-
             @Override
             public void finished() {
                 threadIsRunning = false;
@@ -471,16 +469,13 @@ public class MainFrame extends JFrame {
         LOGGER.info("****** Vergelijking is gestart");
         threadIsRunning = true;
         final SwingWorker worker = new SwingWorker() {
-
             Result r = null;
-
             @Override
             public Object construct() {
                 r = task.vergelijk(progress);
                 //return value not used by this program
                 return r;
             }
-
             @Override
             public void finished() {
                 threadIsRunning = false;

@@ -9,7 +9,7 @@ import javax.swing.JTextArea;
  */
 class MyJTextArea extends JTextArea {
 
-    private final int maxLines = 60000;
+    private final static int maxLines = 60000;
 
     public MyJTextArea() {
         super();
