@@ -5,14 +5,26 @@
     <artifactId>DataSyncMvn</artifactId>
     <version>1.5</version>
     <packaging>jar</packaging>
-    
+    <organization>
+        <name>Verheul Consultants</name>
+        <url>verheulconsultants.nl</url>
+    </organization>
     <name>DataSyncMvn</name>
-    <url>http://verheulconsultants.nl</url>
     <ciManagement>
         <system>hudson</system>
         <url>http://PE-T110/jenkins/job/DataSyncMvn/</url>
     </ciManagement>
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <!-- [Erik] see http://docs.sonarqube.org/display/SONAR/Analyzing+with+SonarQube+Scanner+for+Maven -->
+                    <groupId>org.sonarsource.scanner.maven</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>3.0.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -107,25 +119,5 @@
         <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
     
-    <profiles>
-        <profile>
-            <id>sonar</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <!-- Optional URL to server. Default value is http://localhost:9000 -->
-                <sonar.host.url>
-                    http://192.168.0.251:9000
-                </sonar.host.url>
-                <sonar.jdbc.url>
-                    jdbc:mysql://192.168.0.251:3306/sonar?useUnicode=true&amp;characterEncoding=utf8&amp;rewriteBatchedStatements=true
-                </sonar.jdbc.url>
-                <sonar.jdbc.username>sonar</sonar.jdbc.username>
-                <sonar.jdbc.password>sonar</sonar.jdbc.password>
-            </properties>
-        </profile>
-    </profiles>
-
 </project>
 
