@@ -514,28 +514,28 @@ class MainFrame extends JFrame {
 
     void jStop1_actionPerformed(ActionEvent e) {
         stopOnmiddellijk = true;
-        if (threadIsRunning && stopOnmiddellijk) {
+        if (threadIsRunning) {
             warning("Stop onmiddellijk geactiveerd");
         }
     }
 
     void jStop2_actionPerformed(ActionEvent e) {
         stopNaFile = true;
-        if (threadIsRunning && stopNaFile) {
+        if (threadIsRunning) {
             warning("Stop na file geactiveerd");
         }
     }
 
     void jStop3_actionPerformed(ActionEvent e) {
         stopNaDirectory = true;
-        if (threadIsRunning && stopNaDirectory) {
+        if (threadIsRunning) {
             warning("Stop na Directory geactiveerd");
         }
     }
 
     void jStop4_actionPerformed(ActionEvent e) {
         stopNaBron = true;
-        if (threadIsRunning && stopNaBron) {
+        if (threadIsRunning) {
             warning("Stop na Bron geactiveerd");
         }
     }

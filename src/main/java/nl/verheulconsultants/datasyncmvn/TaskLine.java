@@ -574,7 +574,7 @@ class TaskLine implements Comparable {
         @Override
         public boolean accept(File file) {
             //filter against exclusions
-            if (!excludeFiles.stream().noneMatch((excludeFilter) -> (excludeFilter.match(file.getPath())))) {
+            if (!excludeFiles.stream().noneMatch((excludeFilter) -> excludeFilter.match(file.getPath()))) {
                 return false;
             }
             //filter on what files to include:
