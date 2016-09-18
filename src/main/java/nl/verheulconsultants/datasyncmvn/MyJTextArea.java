@@ -9,13 +9,13 @@ import javax.swing.JTextArea;
  */
 class MyJTextArea extends JTextArea {
 
-    private static final int MAXLINES = 60000;
+    private static final int MAXLINES = 60_000;
 
-    public MyJTextArea() {
+    MyJTextArea() {
         super();
     }
 
-    public MyJTextArea(String text) {
+    MyJTextArea(String text) {
         super(text);
     }
 

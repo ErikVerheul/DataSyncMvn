@@ -1,7 +1,7 @@
 package nl.verheulconsultants.datasyncmvn;
 
 /**
- * @author erik
+ * @author Erik Verheul <erik@verheulconsultants.nl>
  * Helper class to detail the java.version
  */
 class JREversion {

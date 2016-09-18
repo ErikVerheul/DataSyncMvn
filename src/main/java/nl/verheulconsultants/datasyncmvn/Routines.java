@@ -15,10 +15,6 @@ class Routines {
 
     private static final Logger LOGGER = Logger.getLogger(Routines.class.getName());
 
-    // Prevent this class from being instantiated
-    private Routines() {
-
-    }
 
     /**
      * Open default logFile file in user.home
@@ -141,8 +137,8 @@ class Routines {
      */
     static String makeVolumeStr(long size) {
         String str;
-        if (size > 10000000L) {
-            str = " " + (size + 499999L) / 1000000L + " MB";
+        if (size > 10_000_000L) {
+            str = " " + (size + 499_999L) / 1_000_000L + " MB";
         } else {
             str = " " + size + " bytes";
         }
@@ -413,7 +409,7 @@ class Routines {
      */
     static long calcDelay(long maxBandWidth, long blockSize) {
         long assumedTranferTime = 200;
-        long delay = blockSize * 1000 / maxBandWidth;
+        long delay = blockSize * 1_000 / maxBandWidth;
         if (delay > assumedTranferTime) {
             return delay - assumedTranferTime;
         } else {
@@ -435,7 +431,7 @@ class Routines {
         // Limit the copy size to 5 MB to prevent the 'Cannot map' or 'Insufficient system resources' exception.
         // 5 MB turned out a good value for a smooth copying under Windows.
         // Change this value for opimal results in your environment.
-        long bufSize = 5000000L;
+        long bufSize = 5_000_000L;
         long position = 0L;
         long blockSize;
         try (FileChannel in = new FileInputStream(source).getChannel();
@@ -449,7 +445,7 @@ class Routines {
             while (!MainFrame.stopOnmiddellijk && position < in.size()) {
                 // Note that if the given position is greater than the file's current size then no bytes are transferred.
                 in.transferTo(position, blockSize, out);
-                position = position + blockSize;
+                position += blockSize;
                 // Limit the bandwidth if requested (> 0).
                 if (maxBandWidth > 0) {
                     waitMilis(calcDelay(maxBandWidth, blockSize));
@@ -478,5 +474,9 @@ class Routines {
             LOGGER.fatal("Fout bij kopieren " + source.getPath() + " naar " + target.getPath() + " error  " + e.toString());
             return false;
         }
+    }
+    // Prevent this class from being instantiated
+    private Routines() {
+        
     }
 }

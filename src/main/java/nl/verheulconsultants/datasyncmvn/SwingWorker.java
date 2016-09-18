@@ -24,50 +24,22 @@ public abstract class SwingWorker {
      * exit.
      */
     public SwingWorker() {
-        final Runnable doFinished = new Runnable() {
-            @Override
-            public void run() {
-                finished();
-            }
-        };
+        final Runnable doFinished = this::finished;
 
-        Runnable doConstruct = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    setValue(construct());
-                } finally {
-                    threadVar.clear();
-                }
-
-                SwingUtilities.invokeLater(doFinished);
+        Runnable doConstruct = () -> {
+            try {
+                setValue(construct());
+            } finally {
+                threadVar.clear();
             }
+            
+            SwingUtilities.invokeLater(doFinished);
         };
 
         Thread t = new Thread(doConstruct);
         threadVar = new ThreadVar(t);
     }
 
-    /**
-     * Class to maintain reference to current worker thread under separate
-     * synchronization control.
-     */
-    private static class ThreadVar {
-
-        private Thread thread;
-
-        ThreadVar(Thread t) {
-            thread = t;
-        }
-
-        synchronized Thread get() {
-            return thread;
-        }
-
-        synchronized void clear() {
-            thread = null;
-        }
-    }
 
     /**
      * Get the value produced by the worker thread, or null if it hasn't been
@@ -141,6 +113,26 @@ public abstract class SwingWorker {
         Thread t = threadVar.get();
         if (t != null) {
             t.start();
+        }
+    }
+    /**
+     * Class to maintain reference to current worker thread under separate
+     * synchronization control.
+     */
+    private static class ThreadVar {
+        
+        private Thread thread;
+        
+        ThreadVar(Thread t) {
+            thread = t;
+        }
+        
+        synchronized Thread get() {
+            return thread;
+        }
+        
+        synchronized void clear() {
+            thread = null;
         }
     }
 }

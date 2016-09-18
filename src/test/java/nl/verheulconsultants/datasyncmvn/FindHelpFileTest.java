@@ -18,29 +18,47 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author erik
+ * @author Erik Verheul <erik@verheulconsultants.nl>
  */
 public class FindHelpFileTest {
 
-    public FindHelpFileTest() {
-    }
-
+    /**
+     *
+     */
     @BeforeClass
     public static void setUpClass() {
     }
 
+    /**
+     *
+     */
     @AfterClass
     public static void tearDownClass() {
     }
 
+    /**
+     *
+     */
+    public FindHelpFileTest() {
+    }
+
+    /**
+     *
+     */
     @Before
     public void setUp() {
     }
 
+    /**
+     *
+     */
     @After
     public void tearDown() {
     }
 
+    /**
+     *
+     */
     @Test
     public void findHelpFile() {
         System.out.println("findHelpFile");

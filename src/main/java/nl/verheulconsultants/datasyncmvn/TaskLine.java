@@ -20,7 +20,7 @@ class TaskLine implements Comparable {
     private static final int STATUSWINDOW_ONLY = 6;
     private static final int DO_SYNC = 1;
     private static final int DO_COMPARE = 2;
-    private static final int MAX_REPORT_LINES = 1000;
+    private static final int MAX_REPORT_LINES = 1_000;
     private boolean maxReportLinesCountReached = false;
     private final Mapping map;
     private final FilterSpec includeFilter;
@@ -225,7 +225,7 @@ class TaskLine implements Comparable {
                         + ") is NIET gekopieerd maar verwijderd van de bestemming " + out.getPath()
                         + " vanwege een STOP-onmiddellijk opdracht.", WARNING, progress);
             }
-            r.size = r.size + size;
+            r.size += size;
             return true;
         } else {
             removeBusyLine(progress);
@@ -263,7 +263,7 @@ class TaskLine implements Comparable {
             report("File " + in.getPath() + " (" + Routines.makeVolumeStr(in.length())
                     + ") moet gekopieerd worden naar " + out.getPath(), LOG_ONLY, progress);
             //assume the file can be copied
-            r.size = r.size + in.length();
+            r.size += in.length();
             return true;
         }
     }
@@ -277,32 +277,6 @@ class TaskLine implements Comparable {
         }
     }
 
-    private class MyFilter implements FileFilter {
-
-        TaskLine or;
-
-        MyFilter(TaskLine or) {
-            this.or = or;
-        }
-
-        @Override
-        public boolean accept(File file) {
-            //filter against exclusions
-            for (FilterSpec excludeFilter : excludeFiles) {
-                if (excludeFilter.match(file.getPath())) {
-                    return false;
-                }
-            }
-            //filter on what files to include:
-            //accept directories when continueWithSubdirectories is set
-            //accept files and directories which match file.getPath
-            //accept files when filterDirectories is set and match the path component before the file name
-            return file.isDirectory() && or.continueWithSubdirectories()
-                    || includeFilter.match(file.getPath())
-                    || file.isFile() && includeFilter.filterDirectories && includeFilter.match(stripFirstComponent(file.getPath()));
-
-        }
-    }
 
     /**
      * Delete a file if the action is 'DO_SYNC' If the action is 'vergelijk'
@@ -365,7 +339,7 @@ class TaskLine implements Comparable {
         String bron = m.bron;
         File subBestemmingFile = new File(subBestemming);
         if (Routines.canAccessDirOrReadFromFile(subBestemmingFile, "Bestemming")) {
-            if (fileArrayItem.lastModified() - subBestemmingFile.lastModified() > 1000L) {
+            if (fileArrayItem.lastModified() - subBestemmingFile.lastModified() > 1_000L) {
                 //Bron minimaal 1000 mS nieuwer dan Bestemming
                 report("Bron " + subBron + " is NIEUWER dan Bestemming " + subBestemming, DEBUG_INFO, progress);
                 r.fileCountSourceNewer++;
@@ -378,7 +352,7 @@ class TaskLine implements Comparable {
                         deleteFile(fileArrayItem, actie);
                     }
                 }
-            } else if (subBestemmingFile.lastModified() - fileArrayItem.lastModified() > 1000L) {
+            } else if (subBestemmingFile.lastModified() - fileArrayItem.lastModified() > 1_000L) {
                 //Bron minimaal 1000 mS ouder dan bestemming
                 report("Bron " + subBron + " is " + (subBestemmingFile.lastModified() - fileArrayItem.lastModified())
                         + " miliseconden OUDER dan Bestemming " + subBestemming, WARNING, progress);
@@ -587,5 +561,29 @@ class TaskLine implements Comparable {
     public String toString() {
         return "Opdrachtregel with Bron " + map.bron + " and Bestemming " + map.bestemming
                 + ", and include filter: " + includeFilter.toString();
+    }
+
+    private class MyFilter implements FileFilter {
+
+        TaskLine or;
+
+        MyFilter(TaskLine or) {
+            this.or = or;
+        }
+
+        @Override
+        public boolean accept(File file) {
+            //filter against exclusions
+            if (!excludeFiles.stream().noneMatch((excludeFilter) -> (excludeFilter.match(file.getPath())))) {
+                return false;
+            }
+            //filter on what files to include:
+            //accept directories when continueWithSubdirectories is set
+            //accept files and directories which match file.getPath
+            //accept files when filterDirectories is set and match the path component before the file name
+            return file.isDirectory() && or.continueWithSubdirectories()
+                    || includeFilter.match(file.getPath())
+                    || file.isFile() && includeFilter.filterDirectories && includeFilter.match(stripFirstComponent(file.getPath()));
+        }
     }
 }

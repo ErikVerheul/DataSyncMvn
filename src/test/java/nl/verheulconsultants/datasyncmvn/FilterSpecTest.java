@@ -14,26 +14,43 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author erik
+ * @author Erik Verheul <erik@verheulconsultants.nl>
  */
 public class FilterSpecTest {
 
-    public FilterSpecTest() {
-    }
-
+    /**
+     *
+     * @throws Exception
+     */
     @BeforeClass
     public static void setUpClass() throws Exception {
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
 
+    /**
+     *
+     */
+    public FilterSpecTest() {
+    }
+
+    /**
+     *
+     */
     @Before
     public void setUp() {
 
     }
 
+    /**
+     *
+     */
     @After
     public void tearDown() {
     }
@@ -57,6 +74,9 @@ public class FilterSpecTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testOverlap2() {
         System.out.println("overlap abc.* and *c.*");
@@ -73,6 +93,9 @@ public class FilterSpecTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testOverlap3() {
         System.out.println("no overlap abc.* and ?X.*");
@@ -89,6 +112,9 @@ public class FilterSpecTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testOverlap4() {
         System.out.println("overlap abc.* and pqr.*");
@@ -123,6 +149,9 @@ public class FilterSpecTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testMatch2() {
         System.out.println("match abc.* and \\\\server\\sub1\\sub2\\abX.xyz");

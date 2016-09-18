@@ -10,25 +10,42 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author erik
+ * @author Erik Verheul <erik@verheulconsultants.nl>
  */
 public class MappingTest {
 
-    public MappingTest() {
-    }
-
+    /**
+     *
+     * @throws Exception
+     */
     @BeforeClass
     public static void setUpClass() throws Exception {
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
 
+    /**
+     *
+     */
+    public MappingTest() {
+    }
+
+    /**
+     *
+     */
     @Before
     public void setUp() {
     }
 
+    /**
+     *
+     */
     @After
     public void tearDown() {
     }
@@ -47,6 +64,9 @@ public class MappingTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testCompareTo2() {
         System.out.println("compareTo test ignoreCase");
@@ -72,6 +92,9 @@ public class MappingTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     @SuppressWarnings("EC_UNRELATED_TYPES")
     public void testEquals2() {

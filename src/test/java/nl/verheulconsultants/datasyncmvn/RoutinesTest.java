@@ -14,30 +14,48 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author erik
+ * @author Erik Verheul <erik@verheulconsultants.nl>
  */
 public class RoutinesTest {
 
-    File tempFile;
-    File secretFile;
-
-    public RoutinesTest() {
-    }
-
+    /**
+     *
+     * @throws Exception
+     */
     @BeforeClass
     public static void setUpClass() throws Exception {
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     @AfterClass
-    @SuppressWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
+    @SuppressWarnings(value = "RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
     public static void tearDownClass() throws Exception {
     }
 
+    File tempFile;
+    File secretFile;
+
+    /**
+     *
+     */
+    public RoutinesTest() {
+    }
+
+    /**
+     *
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {      
         tempFile = File.createTempFile("testfile", ".tmp");
     }
 
+    /**
+     *
+     */
     @After
     @SuppressWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
     public void tearDown() {
@@ -45,6 +63,9 @@ public class RoutinesTest {
         new File("unknown").delete();
     }
 
+    /**
+     *
+     */
     @Test
     public void testSimpleUNCcheck() {
         String unc = "\\\\server1\\share1\\dir1";
@@ -57,6 +78,9 @@ public class RoutinesTest {
         assertFalse(unc + " is ten onrechte goedgekeurd als een valide UNC naam", Routines.simpleUNCcheck(unc));
     }
 
+    /**
+     *
+     */
     @Test
     public void testCanReadAccessFile() {
         assertTrue("Kan " + tempFile + " niet lezen", Routines.canReadFromFile(tempFile, "bron of bestemming"));
@@ -65,6 +89,9 @@ public class RoutinesTest {
         assertFalse("Toch leestoegang tot deze file van een andere eigenaar??", Routines.canReadFromFile(secretFile, "Bron of Bestemming"));
     }
 
+    /**
+     *
+     */
     @Test
     // make sure an inaccessable file secret.txt is present in the java.io.tmpdir
     public void testCanWriteAccessFile() {
@@ -74,6 +101,9 @@ public class RoutinesTest {
         assertFalse("Toch schrijftoegang tot deze file van een andere eigenaar?", Routines.canWriteToFile(secretFile, new Result(), false));
     }
 
+    /**
+     *
+     */
     @Test
     public void testRemoveReadOnly() {
         assertTrue("Fout bij read-only attribuut verwijderen als dat attribuut niet is gezet", Routines.removeReadOnly(tempFile, "Bron of Bestemming"));
@@ -85,6 +115,9 @@ public class RoutinesTest {
         assertFalse("Toch mogelijk read-only attribuut van deze file zonder toegang te veranderen?", Routines.removeReadOnly(secretFile, "Bron of Bestemming"));
     }
 
+    /**
+     *
+     */
     @Test
     public void testReapplyReadOnly() {
         Routines.reapplyReadOnly(tempFile);
@@ -95,6 +128,9 @@ public class RoutinesTest {
         Routines.reapplyReadOnly(secretFile); //no exception should be thrown
     }
 
+    /**
+     *
+     */
     @Test
     public void testCanAccessDir() {
         assertTrue("Kan directory niet bereiken die wel bestaat", Routines.canAccessDir(tempFile.getParentFile(), "Bron of Bestemming"));
@@ -102,6 +138,9 @@ public class RoutinesTest {
         assertFalse("Kan directory bereiken die een file is?", Routines.canAccessDir(tempFile, "Bron of Bestemming"));
     }
 
+    /**
+     *
+     */
     @Test
     public void testCanWriteDir() {
         assertTrue("Kan niet in directory schrijven die wel bestaat", Routines.canWriteInDir(tempFile.getParentFile(), "Bron of Bestemming"));
@@ -109,6 +148,9 @@ public class RoutinesTest {
         assertFalse("Kan in directory schrijven die een file is?", Routines.canWriteInDir(tempFile, "Bron of Bestemming"));
     }
 
+    /**
+     *
+     */
     @Test
     public void testCanRead() {
         assertTrue("Kan directory niet lezen", Routines.canAccessDirOrReadFromFile(tempFile.getParentFile(), "Bron of Bestemming"));
@@ -118,6 +160,9 @@ public class RoutinesTest {
         assertFalse("Toch leestoegang tot deze file zonder toegang?", Routines.canAccessDirOrReadFromFile(secretFile, "Bron of Bestemming"));
     }
 
+    /**
+     *
+     */
     @Test
     public void testCanCleanDir() {
         File testDir = new File(System.getProperty("java.io.tmpdir"), "testDir8443639434");

@@ -21,16 +21,16 @@ class MainFrame extends JFrame {
     static boolean debugMode = false;
     static boolean overschrijfReadOnly = false;
     static boolean checkAccessToBronAndBestemming = true;
+    static boolean stopOnmiddellijk = false;
+    static boolean stopNaFile = false;
+    static boolean stopNaDirectory = false;
+    static boolean stopNaBron = false;
     private boolean validatieOK;
     private File mappingTabel = null;
     private Task task = null;
     private boolean doCompare = false;
     private boolean doSync = false;
     private boolean threadIsRunning = false;
-    static boolean stopOnmiddellijk = false;
-    static boolean stopNaFile = false;
-    static boolean stopNaDirectory = false;
-    static boolean stopNaBron = false;
     JPanel contentPane;
     JMenuBar jMenuBar1 = new JMenuBar();
     JMenu jMenuFile = new JMenu();
@@ -91,7 +91,7 @@ class MainFrame extends JFrame {
         jLabelMappingTabel.setText("Mapping tabel:");
         jPanelActies.setAlignmentX((float) 0.5);
         jPanelActies.setBorder(BorderFactory.createLoweredBevelBorder());
-        jPanelActies.setMaximumSize(new Dimension(32767, 150));
+        jPanelActies.setMaximumSize(new Dimension(32_767, 150));
         jPanelActies.setMinimumSize(new Dimension(50, 150));
         jPanelActies.setOpaque(false);
         jPanelActies.setPreferredSize(new Dimension(800, 150));
@@ -148,7 +148,7 @@ class MainFrame extends JFrame {
         this.setJMenuBar(jMenuBar1);
 
         JPanel twoItems = new JPanel();
-        twoItems.setMaximumSize(new Dimension(32767, 40));
+        twoItems.setMaximumSize(new Dimension(32_767, 40));
         twoItems.setPreferredSize(new Dimension(745, 40));
         twoItems.add(jLabelMappingTabel);
         twoItems.add(jTextFieldMappingTabel);
@@ -303,46 +303,22 @@ class MainFrame extends JFrame {
         JButton stopOnmiddellijkButton = new JButton("STOP onmiddellijk");
         stopOnmiddellijkButton.setFont(new java.awt.Font(dialogFont, 0, 20));
         stopOnmiddellijkButton.setToolTipText("Stop onmiddellijk, ook als een file slechts deels gekopieerd is");
-        stopOnmiddellijkButton.addActionListener(new java.awt.event.ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                jStop1_actionPerformed(e);
-            }
-        });
+        stopOnmiddellijkButton.addActionListener(this::jStop1_actionPerformed);
         center.add(stopOnmiddellijkButton);
         JButton stopNaFileButton = new JButton("STOP na File");
         stopNaFileButton.setFont(new java.awt.Font(dialogFont, 0, 20));
         stopNaFileButton.setToolTipText("Stop nadat de file gekopieerd is");
-        stopNaFileButton.addActionListener(new java.awt.event.ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                jStop2_actionPerformed(e);
-            }
-        });
+        stopNaFileButton.addActionListener(this::jStop2_actionPerformed);
         center.add(stopNaFileButton);
         JButton stopNaDirectoryButton = new JButton("STOP na Directory");
         stopNaDirectoryButton.setFont(new java.awt.Font(dialogFont, 0, 20));
         stopNaDirectoryButton.setToolTipText("Stop nadat met de Bron subdirectory verwerkt is");
-        stopNaDirectoryButton.addActionListener(new java.awt.event.ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                jStop3_actionPerformed(e);
-            }
-        });
+        stopNaDirectoryButton.addActionListener(this::jStop3_actionPerformed);
         center.add(stopNaDirectoryButton);
         JButton stopNaBronButton = new JButton("STOP na Bron");
         stopNaBronButton.setFont(new java.awt.Font(dialogFont, 0, 20));
         stopNaBronButton.setToolTipText("Stop nadat de Bron 'root' verwerkt is");
-        stopNaBronButton.addActionListener(new java.awt.event.ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                jStop4_actionPerformed(e);
-            }
-        });
+        stopNaBronButton.addActionListener(this::jStop4_actionPerformed);
         center.add(stopNaBronButton);
         contentContainer.add(center, BorderLayout.NORTH);
         progressWindow.setFont(new java.awt.Font(dialogFont, 0, 12));
@@ -404,7 +380,7 @@ class MainFrame extends JFrame {
         if (r.errorCount > 0) {
             msg = msg + " Er zijn " + r.errorCount + " fouten, zie de log";
         } else {
-            msg = msg + " Er zijn geen fouten";
+            msg += " Er zijn geen fouten";
         }
         String s1 = "Nieuwe bron files: " + r.fileCountNewFile
                 + ", waarvan gesynchroniseerd: " + r.fileCountNewFileSynct;
@@ -452,7 +428,7 @@ class MainFrame extends JFrame {
         if (r.errorCount > 0) {
             msg = msg + " Er zijn " + r.errorCount + " fouten, zie de log";
         } else {
-            msg = msg + " Er zijn geen fouten";
+            msg += " Er zijn geen fouten";
         }
         String s1 = "Nieuwe bron files: " + r.fileCountNewFile
                 + ", waarvan mogelijk te synchroniseren: " + r.fileCountNewFileSynct;

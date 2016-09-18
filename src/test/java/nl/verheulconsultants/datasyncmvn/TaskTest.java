@@ -11,26 +11,43 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author erik
+ * @author Erik Verheul <erik@verheulconsultants.nl>
  */
 public class TaskTest {
 
-    public TaskTest() {
-    }
-
+    /**
+     *
+     * @throws Exception
+     */
     @BeforeClass
     public static void setUpClass() throws Exception {
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
 
+    /**
+     *
+     */
+    public TaskTest() {
+    }
+
+    /**
+     *
+     */
     @Before
     public void setUp() {
         
     }
 
+    /**
+     *
+     */
     @After
     public void tearDown() {
     }
@@ -69,6 +86,9 @@ public class TaskTest {
         assertEquals(expResult, result);
     }
     
+    /**
+     *
+     */
     @Test
     public void testLeesTabel2() {
         System.out.println("leesTabel with valid file");
@@ -80,6 +100,9 @@ public class TaskTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testLeesTabel3() {
         System.out.println("leesTabel - NIET toegestaan: zelfde bron naar meerdere bestemmingen");
@@ -91,6 +114,9 @@ public class TaskTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testLeesTabel4() {
         System.out.println("leesTabel - NIET toegestaan: bestemming is subdirectory van de bron");
@@ -102,6 +128,9 @@ public class TaskTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testLeesTabel5() {
         System.out.println("leesTabel - Kies of voor file, of voor directory selectie, niet beide");
@@ -113,6 +142,9 @@ public class TaskTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testLeesTabel6() {
         System.out.println("leesTabel - Filters op de zelfde bron mogen elkaar niet overlappen");
@@ -124,6 +156,9 @@ public class TaskTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testLeesTabel7() {
         System.out.println("leesTabel - bestemming zonder bron");

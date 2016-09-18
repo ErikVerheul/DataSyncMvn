@@ -41,11 +41,10 @@ import javax.swing.*;
  * verschillende bron directories naar een bestemmingsdirectorie. Verwijderen
  * van gekopieerde of oudere bron files
  *
- * @author Erik Verheul
+ * @author Erik Verheul <erik@verheulconsultants.nl> Verheul
  */
 public class DataSync {
 
-    boolean packFrame = true;
     static String DELIMITER = ";";
     static String COMMENT = "!";
     static String EMPTYFIELD = "_";
@@ -53,8 +52,30 @@ public class DataSync {
     static boolean runningWindows;
     private static final Logger LOGGER = Logger.getLogger(DataSync.class.getName());
 
+    /**
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            LOGGER.warn("Kan systeem look-en-feel niet instellen. Fout: ", e);
+        }
+        //Schedule a job for the event-dispatching thread:
+        //creating and showing this application's GUI.
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            new DataSync();
+        });
+    }
+    boolean packFrame = true;
+
     //Construct the application
-    @SuppressWarnings({"DM_EXIT", "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD"})
+
+    /**
+     *
+     */
+    @SuppressWarnings(value = {"DM_EXIT", "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD"})
     public DataSync() {
         runningWindows = System.getProperty("os.name").startsWith("Windows");
         //test for the JRE to be "1.4.2_03" or higher
@@ -85,27 +106,10 @@ public class DataSync {
         } else {
             JOptionPane.showMessageDialog(null,
                     "U gebruikt de Java Runtime Environment " + jREfound.version
-                    + "\nDit programma is getest op JRE versie 1.4.2_03"
-                    + "\nGebruik JRE1.4.2_03 of hoger",
+                            + "\nDit programma is getest op JRE versie 1.4.2_03"
+                            + "\nGebruik JRE1.4.2_03 of hoger",
                     "Verkeerde Java Runtime Environment",
                     JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            LOGGER.warn("Kan systeem look-en-feel niet instellen. Fout: ", e);
-        }
-        //Schedule a job for the event-dispatching thread:
-        //creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                new DataSync();
-            }
-        });
     }
 }

@@ -16,12 +16,12 @@ class Task {
     @SuppressWarnings("URF_UNREAD_FIELD")
     private static final Logger LOGGER = Logger.getLogger(Task.class.getName());
     private static final int AANTAL_VELDEN = 7;
-    private final File mappingTabel;
-    private final JTextArea statusBar;
-    private final List<TaskLine> regels;
     private static final int DO_SYNC = 1;
     private static final int DO_COMPARE = 2;
     private static final boolean IGNORE_CASE = DataSync.runningWindows;
+    private final File mappingTabel;
+    private final JTextArea statusBar;
+    private final List<TaskLine> regels;
     //processLine
     private String bron;
     private String pathWildcard;
@@ -95,18 +95,25 @@ class Task {
             option = field.substring(pos2 + 1).trim().toLowerCase();
             for (int i = 0; i < option.length(); i++) {
                 char opt = option.charAt(i);
-                if (opt == 'f') {
-                    filterFiles = true;
-                } else if (opt == 'd') {
-                    filterDirectories = true;
-                } else if (opt == 's') {
-                    filterSubdirectories = true;
-                } else if (opt == '/' || opt == ' ') {
-                    //ignore '/' and spaces
-                } else {
-                    statusBar.append("Fout in regel " + lineNr
-                            + ", onbekende optie: " + opt + " in " + option + "\n");
-                    localLineOK = false;
+                switch (opt) {
+                    case 'f':
+                        filterFiles = true;
+                        break;
+                    case 'd':
+                        filterDirectories = true;
+                        break;
+                    case 's':
+                        filterSubdirectories = true;
+                        break;
+                //ignore '/' and spaces
+                    case '/':
+                    case ' ':
+                        break;
+                    default:
+                        statusBar.append("Fout in regel " + lineNr
+                                + ", onbekende optie: " + opt + " in " + option + "\n");
+                        localLineOK = false;
+                        break;
                 }
             }
         }
@@ -170,14 +177,19 @@ class Task {
                 String option = field.substring(pos + 1).trim().toLowerCase();
                 for (int i = 0; i < option.length(); i++) {
                     char opt = option.charAt(i);
-                    if (opt == 'd') {
-                        dumpFiles = true;
-                    } else if (opt == '/' || opt == ' ') {
-                        //ignore '/' and spaces
-                    } else {
-                        statusBar.append("Fout in regel " + lineNr
-                                + ", onbekende optie: " + opt + " in " + option + "\n");
-                        locaLineOK = false;
+                    switch (opt) {
+                        case 'd':
+                            dumpFiles = true;
+                            break;
+                    //ignore '/' and spaces
+                        case '/':
+                        case ' ':
+                            break;
+                        default:
+                            statusBar.append("Fout in regel " + lineNr
+                                    + ", onbekende optie: " + opt + " in " + option + "\n");
+                            locaLineOK = false;
+                            break;
                     }
                 }
                 if (MainFrame.debugMode) {
@@ -209,14 +221,18 @@ class Task {
         boolean locaLineOK = true;
         try {
             int maakBestemmingSchoonInt = Integer.parseInt(field);
-            if (maakBestemmingSchoonInt == 1) {
-                maakBestemmingSchoon = true;
-            } else if (maakBestemmingSchoonInt == 0) {
-                maakBestemmingSchoon = false;
-            } else {
-                statusBar.append("Fout in regel " + lineNr
-                        + ", toegestane waarden voor 'maak Bestemming Schoon' zijn true, waar, 1, false, onwaar, 0\n");
-                locaLineOK = false;
+            switch (maakBestemmingSchoonInt) {
+                case 1:
+                    maakBestemmingSchoon = true;
+                    break;
+                case 0:
+                    maakBestemmingSchoon = false;
+                    break;
+                default:
+                    statusBar.append("Fout in regel " + lineNr
+                            + ", toegestane waarden voor 'maak Bestemming Schoon' zijn true, waar, 1, false, onwaar, 0\n");
+                    locaLineOK = false;
+                    break;
             }
         } catch (NumberFormatException e) {
             maakBestemmingSchoon = field.compareToIgnoreCase("true") == 0 || field.compareToIgnoreCase("waar") == 0;
@@ -234,14 +250,18 @@ class Task {
         boolean locaLineOK = true;
         try {
             int verwijderBronInt = Integer.parseInt(field);
-            if (verwijderBronInt == 1) {
-                verwijderBron = true;
-            } else if (verwijderBronInt == 0) {
-                verwijderBron = false;
-            } else {
-                statusBar.append("Fout in regel " + lineNr
-                        + ", toegestane waarden voor 'verwijder Bron' zijn true, waar, 1, false, onwaar, 0\n");
-                locaLineOK = false;
+            switch (verwijderBronInt) {
+                case 1:
+                    verwijderBron = true;
+                    break;
+                case 0:
+                    verwijderBron = false;
+                    break;
+                default:
+                    statusBar.append("Fout in regel " + lineNr
+                            + ", toegestane waarden voor 'verwijder Bron' zijn true, waar, 1, false, onwaar, 0\n");
+                    locaLineOK = false;
+                    break;
             }
         } catch (NumberFormatException e) {
             verwijderBron = field.compareToIgnoreCase("true") == 0 || field.compareToIgnoreCase("waar") == 0;
@@ -265,7 +285,7 @@ class Task {
                 locaLineOK = false;
             } else {
                 // convert to Bytes/s.
-                maxBandWidth = maxBandWidthMB * 1000000L;
+                maxBandWidth = maxBandWidthMB * 1_000_000L;
             }
         } catch (NumberFormatException e) {
             statusBar.append("Fout in regel " + lineNr
@@ -279,7 +299,7 @@ class Task {
         boolean locaLineOK = true;
         if (!field.startsWith(DataSync.EMPTYFIELD)) {
             try {
-                dataLimit = Long.parseLong(field) * 1000000;
+                dataLimit = Long.parseLong(field) * 1_000_000;
                 if (dataLimit < 0) {
                     statusBar.append("Fout in regel " + lineNr
                             + ", 'data limiet' moet groter gelijk 0 zijn\n");
