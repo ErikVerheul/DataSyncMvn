@@ -60,7 +60,7 @@ public class RoutinesTest {
     @Test
     public void testCanReadAccessFile() {
         assertTrue("Kan " + tempFile + " niet lezen", Routines.canReadFromFile(tempFile, "bron of bestemming"));
-        assertFalse("Kan niet bestaande file w�l lezen?", Routines.canReadFromFile(new File("unknown"), "bron of bestemming"));
+        assertFalse("Kan niet bestaande file wel lezen?", Routines.canReadFromFile(new File("unknown"), "bron of bestemming"));
         secretFile = new File(System.getProperty("java.io.tmpdir"), "secret.txt");
         assertFalse("Toch leestoegang tot deze file van een andere eigenaar??", Routines.canReadFromFile(secretFile, "Bron of Bestemming"));
     }

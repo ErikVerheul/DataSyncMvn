@@ -7,8 +7,10 @@ import java.util.Properties;
 import javax.swing.*;
 
 /**
+ * Versie 1.6: geconverteerd naar Java 1.8
+ * 
  * Title: DataSync. Description: Data synchronisation tool. Copyright: Copyright
- * Verheul Consultants (c) 2004-2014. Contact erik@verheulconsultants.nl.
+ * Verheul Consultants (c) 2004-2016. Contact erik@verheulconsultants.nl.
  * Customer: Data synchronisation tool voor de ULC Groep b.v.
  *
  * Kopieer functie:
