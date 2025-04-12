@@ -15,7 +15,6 @@ class Routines {
 
     private static final Logger LOGGER = Logger.getLogger(Routines.class.getName());
 
-
     /**
      * Open default logFile file in user.home
      *
@@ -203,29 +202,26 @@ class Routines {
      * @return true if successful
      */
     static boolean removeReadOnly(File file, String subject) {
-        JREversion jre = new JREversion();
         if (!canReadFromFile(file, subject)) {
             return false;
         }
-        if (jre.medium >= 6) {
+
+        if (!DataSync.runningWindows) {
             if (file.setReadable(true)) {
                 LOGGER.info("Read-only attribuut van file " + file.getPath() + " is verwijderd");
                 return true;
             }
             return false;
-        } else if (DataSync.runningWindows) {
+        } else {
             try {
                 Process proc = Runtime.getRuntime().exec("attrib.exe " + file.getPath() + " -r");
                 proc.waitFor();
                 LOGGER.info("Read-only attribuut van file " + file.getPath() + " is verwijderd met attrib.exe");
                 return true;
             } catch (IOException | InterruptedException e) {
-                LOGGER.fatal("Kan attrib.exe " + file.getPath() + " -r" + " niet starten. Fout = " + e.toString());
+                LOGGER.fatal("Kan read-only attribuut niet verwijderen omdat attrib.exe " + file.getPath() + " -r" + " niet start. Fout = " + e.toString());
                 return false;
             }
-        } else {
-            LOGGER.fatal("Kan read-only attribuut niet verwijderen op deze Jave Runtime met versie " + jre + " , gebruik Java 6 of hoger.");
-            return false;
         }
     }
 
@@ -434,8 +430,7 @@ class Routines {
         long bufSize = 5_000_000L;
         long position = 0L;
         long blockSize;
-        try (FileChannel in = new FileInputStream(source).getChannel();
-                FileChannel out = new FileOutputStream(target).getChannel()) {
+        try (FileChannel in = new FileInputStream(source).getChannel(); FileChannel out = new FileOutputStream(target).getChannel()) {
             // Getting file channels                     
             if (in.size() <= bufSize) {
                 blockSize = in.size();
@@ -475,8 +470,9 @@ class Routines {
             return false;
         }
     }
+
     // Prevent this class from being instantiated
     private Routines() {
-        
+
     }
 }
