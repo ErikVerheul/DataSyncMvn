@@ -8,7 +8,7 @@ import javax.swing.*;
 
 /**
  * Versie 1.6: geconverteerd naar Java 1.8
- * 
+ *
  * Title: DataSync. Description: Data synchronisation tool. Copyright: Copyright
  * Verheul Consultants (c) 2004-2016. Contact erik@verheulconsultants.nl.
  * Customer: Data synchronisation tool voor de ULC Groep b.v.
@@ -70,46 +70,33 @@ public class DataSync {
     }
     boolean packFrame = true;
 
-    //Construct the application
-
     /**
-     *
+     * Construct the application
      */
     @SuppressWarnings(value = {"DM_EXIT", "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD"})
     public DataSync() {
         runningWindows = System.getProperty("os.name").startsWith("Windows");
-        //test for the JRE to be "1.4.2_03" or higher
-        JREversion jREfound = new JREversion();
-        if (jREfound.checkVersion()) {
-            MainFrame frame = new MainFrame();
-            //Validate frames that have preset sizes
-            //Pack frames that have useful preferred size info, e.g. from their layout
-            if (packFrame) {
-                frame.pack();
-            } else {
-                frame.validate();
-            }
-            Routines.centerAndShowFrame(frame);
-
-            // get the default logfile
-            Properties prop = new Properties();
-
-            try (InputStream input = this.getClass().getClassLoader().getResourceAsStream("log4j.properties")) {
-                // load a properties file
-                prop.load(input);
-                // get the property value
-                logFile = new File(prop.getProperty("log4j.appender.file.File"));
-            } catch (IOException ex) {
-                ex.printStackTrace(); //NOSONAR
-            }
-            LOGGER.info("Applicatie is gestart met default log file " + logFile.getPath());
+        MainFrame frame = new MainFrame();
+        //Validate frames that have preset sizes
+        //Pack frames that have useful preferred size info, e.g. from their layout
+        if (packFrame) {
+            frame.pack();
         } else {
-            JOptionPane.showMessageDialog(null,
-                    "U gebruikt de Java Runtime Environment " + jREfound.version
-                            + "\nDit programma is getest op JRE versie 1.4.2_03"
-                            + "\nGebruik JRE1.4.2_03 of hoger",
-                    "Verkeerde Java Runtime Environment",
-                    JOptionPane.ERROR_MESSAGE);
+            frame.validate();
         }
+        Routines.centerAndShowFrame(frame);
+
+        // get the default logfile
+        Properties prop = new Properties();
+
+        try (InputStream input = this.getClass().getClassLoader().getResourceAsStream("log4j.properties")) {
+            // load a properties file
+            prop.load(input);
+            // get the property value
+            logFile = new File(prop.getProperty("log4j.appender.file.File"));
+        } catch (IOException ex) {
+            ex.printStackTrace(); //NOSONAR
+        }
+        LOGGER.info("Applicatie is gestart met default log file " + logFile.getPath());
     }
 }
