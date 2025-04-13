@@ -9,9 +9,9 @@
 !bestemming;Mag geen subdirectory zijn van de bron en moet bestaan. Gebruik '_' (underline) teken voor een lege bestemming;;;;;
 !overschrijf nieuwer:;Als TRUE worden bestemming files die nieuwer zijn dan de bron files overschreven;;;;;
 !verwijder bron;Als TRUE wordt een lijst samengesteld voor de verwijdering van Bronnen die met succes zijn gekopieerd of waarvan de versie op de Bestemming nieuwer is;;;;;
-!max bandbreedte: ;Maximale doorzet in Mbytes/sec bij het kopiëren Deze optie is misschien nodig om het netwerk niet te overbelasten.;;;;;
+!max bandbreedte: ;Maximale doorzet in Mbytes/sec bij het kopieren Deze optie is misschien nodig om het netwerk niet te overbelasten.;;;;;
 !;Type 0 voor de maximale snelheid.;;;;;
-!data limiet;Maximum te kopiëren MB; STOP voordat deze limiet is bereikt. Gebruik '_' (underline) teken voor een onbeperkte data limiet;;;;;
+!data limiet;Maximum te kopieren MB; STOP voordat deze limiet is bereikt. Gebruik '_' (underline) teken voor een onbeperkte data limiet;;;;;
 !max errors:;Maximum aantal toegestane 'severe' errors; STOP als deze limiet is bereikt;;;;;
 !;;;;;;
 !noot:;Velden die beginnen met een uitroepteken en volgende velden in de regel zijn commentaar;;;;;
@@ -29,7 +29,7 @@
 !voorbeelden gebruik van file en directory filters;;ONWAAR;ONWAAR;;;;
 \\server1\share1\dir1\a???.* /f;\\root2\share2\dir1;ONWAAR;ONWAAR;0;_;10;!Kopieer nieuwe files van de map dir1 beginnend met een a en 4 tekens lang op share1 naar de map dir1 in de DFS root root2 op het Windows systeem.
 \\server1\share1\dir1\b???.* /d;\\root2\share2\dir1;ONWAAR;ONWAAR;0;_;10;!Kopieer nieuwe files van de map dir1 in de subdirectories beginnend met een b en 4 tekens lang op share1 naar de map dir1 in de DFS root root2 op het Windows systeem.
-!alle files naar één directory;;;;;;
+!alle files naar een directory;;;;;;
 \\server1\share1\dir1\e???.* /f;\\root2\share2\dir1 /d;ONWAAR;ONWAAR;0;_;10;!Als regel 31, maar nu worden geen subdirectories aangemaakt onder de Bestemming. Alle files worden 'gedumpt' in \\root2\share2\dir1. Als 'overschrijf nieuwer' uit staat komt de meest recente versie van een file in de Bestemming terecht. Als 'overschrijf nieuwer' aan staat komt de laatst vergeleken versie van een file in de Bestemming terecht.
 !wat niet mag;;;;_;;
 !\\server1\share1\dir1\a???.* /fd;\\root2\share2\dir1;ONWAAR;ONWAAR;0;_;10;!Kies of voor file, of voor directory selectie, niet beide
