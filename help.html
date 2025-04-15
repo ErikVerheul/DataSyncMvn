@@ -19,7 +19,7 @@
     <body>
         <h1>DataSync Synchronisatie tool</h1>
         <h2>Help</h2>
-        <h3>Versie 1.30 (juni 2011)</h3>
+        <h3>Versie 1.27 (december 2010)</h3>
         <h4>Contents</h4>
         <ul>
             <li><a href="#10">Doel</a> </li>
@@ -55,7 +55,6 @@
             de kopieslag heeft de gebruiker de mogelijkheid de bron bestanden te verwijderen.
             Met deze functies is het mogelijk intern 'opruiming' te houden. Het is van belang
             v&oacute;&oacute;r deze acties een volledige backup te maken.</p>
-        <p>Vanaf versie 1.30 is het mogelijk de doeldirectory eerst schoon te maken alvorens met kopieren te starten. Deze optie is handig als veel bestanden in de bron zijn verwijderd en het zeker is dat daarvan geen kopie moet worden bewaard. </p>
         <h4><a name="20"></a>Functies</h4>
         <p>Het programma vraagt om een file waarin de gebruiker heeft aangegeven welke
             'root' directories als bron met welke 'root' directories als bestemming gesynchroniseerd
@@ -113,10 +112,6 @@
             <tr>
                 <td width="15%"><b>bestemming</b></td>
                 <td width="85%">Zie voor het formaat de beschrijving van de  bron. De directory moet bestaan (wordt niet automatisch aangemaakt). </td>
-            </tr>
-			<tr>
-                <td width="15%"><b>maak bestemming directory eerst schoon</b></td>
-                <td width="85%">Als WAAR worden alle bestanden subdirectories in de bestemming verwijderd voordat met de kopieeractie wordt gestart. </td>
             </tr>
             <tr>
                 <td width="15%"><b>verwijder bron</b></td>
@@ -226,17 +221,17 @@
             (opdrachtregel) en wordt doorgegaan met de volgende opdrachtregel.</p>
         <h4><a name="40"></a>Bijzondere mappings</h4>
         <p><b>Maak een uizondering voor een deel van een bron directory tree:</b><br>
-            \\server1\share1\dir1;\\root2\share2\dir1;FALSE;FALSE;0;100;10;<br>
+            \\server1\share1\dir1;\\root2\share2\dir1;TRUE;FALSE;0;100;10;<br>
             \\server1\share1\dir1\dir11;\\root2\share3\dir1\dir11;TRUE;FALSE;10;1000;100;<br>
             Gedeeltelijke overrule van de eerste regel: kopieer nieuwe files van dir11 NIET
             naar root2\share2\dir1\dir11 maar naar root2\share3\dir1\dir11</p>
         <p><b>Sluit een directory uit:</b><br>
-            \\server1\share1\dir1;\\root2\share2\dir1;FALSE;FALSE;0;100;10;<br>
+            \\server1\share1\dir1;\\root2\share2\dir1;TRUE;FALSE;0;100;10;<br>
             \\server1\share1\dir1\dir12;_;TRUE;FALSE;10;10000;100;<br>
             Gedeeltelijke overrule van de eerste regel: kopieer nieuwe files van dir12 NIET
             naar het Windows systeem</p>
         <p><b>Kopieer meerdere bronnen naar de zelfde bestemming:</b><br>
-            \\server1\share1\dir1;\\root2\share2\dir1;FALSE;FALSE;0;100;10; <br>
+            \\server1\share1\dir1;\\root2\share2\dir1;TRUE;FALSE;0;100;10; <br>
             \\server1\share1\dir2;\\root2\share2\dir1;FALSE;FALSE;10;_;100;<br>
             Toegestaan: meer dan 1 bron kopieert naar dezelfde bestemming. Nieuwere files
             (evt. afkomstig van \\server1\share1\dir2) worden hier niet overschreven (het
@@ -257,7 +252,7 @@
         <h4><a name="50"></a> Andere toepassingen</h4>
         <p>Dit programma kan ook gebruikt worden waar normaal een copy of backup tool
             wordt ingezet. Met DataSync kan het proces rustig (zonder de servers of het
-            netwerk te overbelasten) verlopen dankzij de 'bandbreedte' optie.</p>
+            netwerk te overbelasten) verlopen dankzij de 'delay' optie.</p>
 
         <h4><a name="copyright"></a>Copyright Notice</h4>
         <p>&copy; Copyright 2004-2010 by Verheul Consultants. All rights reserved. </p>
